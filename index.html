@@ -30,7 +30,6 @@
           <ul class="navbar-nav ms-auto align-items-lg-center gap-2">
             <li class="nav-item"><a class="nav-link active" href="#nosotros">Quiénes Somos</a></li>
             <li class="nav-item"><a class="nav-link" href="#oferta-academica">Oferta Académica</a></li>
-            <li class="nav-item"><a class="nav-link" href="#galeria-actividades">Actividades</a></li>
             <li class="nav-item"><a class="nav-link" href="#contacto">Contacto</a></li>
             <li class="nav-item ms-lg-2">
               <a class="btn btn-outline-success btn-sm fw-bold text-white d-flex align-items-center gap-1" href="https://classroom.google.com" target="_blank">
@@ -42,7 +41,7 @@
                 <i class="bi bi-shield-lock-fill me-1"></i> Portales de Acceso
               </a>
               <ul class="dropdown-menu dropdown-menu-end">
-                <li><a class="dropdown-item" href="#portal-estudiante"><i class="bi bi-person-badge me-2"></i>Acceso Estudiantes (NIE)</a></li>
+                <li><a class="dropdown-item" href="#portal-estudiante"><i class="bi bi-person-badge me-2"></i>Acceso Estudiantes</a></li>
                 <li><a class="dropdown-item" href="#portal-docente"><i class="bi bi-person-workspace me-2"></i>Acceso Docentes</a></li>
                 <li><hr class="dropdown-divider"></li>
                 <li><a class="dropdown-item text-danger fw-bold" href="#portal-admin"><i class="bi bi-gear-fill me-2"></i>Acceso Administrador</a></li>
@@ -73,7 +72,7 @@
                 <div class="col-md-6">
                     <span class="badge bg-primary fs-6 mb-2">Identidad Institucional</span>
                     <h2 class="fw-bold text-dark mb-3">¿Quiénes Somos?</h2>
-                    <p id="texto-nosotros" class="text-secondary lead fs-6">
+                    <p class="text-secondary lead fs-6">
                         El <strong>Colegio Evangélico El Edén</strong> es una institución orientada al desarrollo integral de los estudiantes, fomentando principios morales y excelencia educativa.
                     </p>
                 </div>
@@ -118,18 +117,18 @@
 
         <hr class="my-5">
 
-        <!-- SECCIÓN 1: PORTAL DE ESTUDIANTES (POR NIE) -->
+        <!-- SECCIÓN 1: PORTAL DE ESTUDIANTES (POR CÓDIGO DE BASE DE DATOS) -->
         <section id="portal-estudiante" class="mb-5 pt-3">
             <div class="card shadow-sm border-0 p-4 bg-white">
                 <div class="text-center mb-3">
                     <span class="badge bg-primary fs-6 mb-1">Estudiantes</span>
-                    <h3 class="fw-bold">Portal de Consulta por NIE</h3>
-                    <p class="text-muted small">Ingrese su número de NIE para consultar su información académica.</p>
+                    <h3 class="fw-bold">Portal de Consulta por Código</h3>
+                    <p class="text-muted small">Ingrese su código asignado en la base de datos para consultar su información académica.</p>
                 </div>
                 <div class="row justify-content-center">
                     <div class="col-md-6 mb-3">
-                        <label class="form-label fw-bold">Número de NIE:</label>
-                        <input type="text" id="inputNie" class="form-control" placeholder="Ej: 12345678">
+                        <label class="form-label fw-bold">Código de Estudiante:</label>
+                        <input type="text" id="inputCodigoEstudiante" class="form-control" placeholder="Ej: EST-001">
                     </div>
                     <div class="col-md-6 mb-3">
                         <label class="form-label fw-bold">Sección a Consultar:</label>
@@ -141,34 +140,32 @@
                         </select>
                     </div>
                 </div>
-                <button class="btn btn-primary fw-bold w-100" onclick="consultarEstudiantePorNie()">
+                <button class="btn btn-primary fw-bold w-100" onclick="consultarEstudiantePorCodigo()">
                     <i class="bi bi-search me-1"></i> Consultar Mis Datos
                 </button>
             </div>
         </section>
 
-        <!-- SECCIÓN 2: PORTAL DE DOCENTES (POR CÓDIGO) -->
+        <!-- SECCIÓN 2: PORTAL DE DOCENTES -->
         <section id="portal-docente" class="mb-5 pt-3">
             <div class="card shadow-sm border-0 p-4 bg-white border-start border-4 border-success">
                 <div class="text-center mb-3">
                     <span class="badge bg-success fs-6 mb-1">Docentes</span>
                     <h3 class="fw-bold">Acceso para Docentes</h3>
-                    <p class="text-muted small">Ingrese el código de acceso proporcionado por la administración escolar.</p>
+                    <p class="text-muted small">Ingrese el código de acceso proporcionado por la administración.</p>
                 </div>
                 <div id="loginDocenteBox" class="row justify-content-center">
                     <div class="col-md-6 mb-3">
-                        <label class="form-label fw-bold">Código de Docente:</label>
-                        <input type="password" id="inputCodigoDocente" class="form-control" placeholder="Ingrese su código">
+                        <input type="password" id="inputCodigoDocente" class="form-control" placeholder="Código de Docente">
                     </div>
                     <div class="col-12 text-center">
-                        <button class="btn btn-success fw-bold px-5" onclick="verificarDocente()">Ingresar como Docente</button>
+                        <button class="btn btn-success fw-bold px-5" onclick="verificarDocente()">Ingresar</button>
                     </div>
                 </div>
-                <!-- Panel interno para Docente autorizado -->
                 <div id="panelDocenteAutorizado" class="panel-oculto">
-                    <div class="alert alert-success text-center fw-bold">¡Acceso concedido a Docente!</div>
+                    <div class="alert alert-success text-center fw-bold">¡Acceso Concedido a Docente!</div>
                     <div class="mb-3">
-                        <label class="form-label fw-bold">Seleccione Base de Datos / Pestaña a visualizar:</label>
+                        <label class="form-label fw-bold">Pestaña a visualizar:</label>
                         <select id="selectPestanaDocente" class="form-select mb-3">
                             <option value="Estudiantes">Estudiantes</option>
                             <option value="Calificaciones">Calificaciones</option>
@@ -187,39 +184,45 @@
                 <div class="text-center mb-3">
                     <span class="badge bg-danger fs-6 mb-1">Administración</span>
                     <h3 class="fw-bold">Panel de Administrador</h3>
-                    <p class="text-muted small">Acceso restringido para control total y gestión institucional.</p>
+                    <p class="text-muted small">Control total: genera, cambia y recupera códigos de acceso de todo el sistema.</p>
                 </div>
                 <div id="loginAdminBox" class="row justify-content-center">
                     <div class="col-md-6 mb-3">
-                        <label class="form-label fw-bold">Clave de Administrador:</label>
-                        <input type="password" id="inputClaveAdmin" class="form-control" placeholder="Contraseña de admin">
+                        <input type="password" id="inputClaveAdmin" class="form-control" placeholder="Clave de Administrador">
                     </div>
                     <div class="col-12 text-center">
-                        <button class="btn btn-danger fw-bold px-5" onclick="verificarAdmin()">Ingresar como Administrador</button>
+                        <button class="btn btn-danger fw-bold px-5" onclick="verificarAdmin()">Ingresar</button>
                     </div>
                 </div>
-                <!-- Panel interno para Administrador autorizado -->
                 <div id="panelAdminAutorizado" class="panel-oculto">
                     <div class="alert alert-danger text-center fw-bold"><i class="bi bi-shield-fill-check me-2"></i>¡Panel de Administrador Activo!</div>
                     
                     <div class="row g-4 mb-4">
-                        <!-- Generar Códigos para Docentes -->
+                        <!-- Gestor de Códigos Unificado -->
                         <div class="col-md-6">
                             <div class="p-3 bg-light rounded border">
-                                <h5 class="fw-bold text-dark mb-2"><i class="bi bi-key-fill text-warning me-2"></i>Generar Código Docente</h5>
-                                <p class="small text-muted">Cree un código seguro para un nuevo docente.</p>
-                                <button class="btn btn-warning fw-bold text-dark w-100" onclick="generarCodigoDocente()">Generar Nuevo Código</button>
-                                <div id="resultadoCodigo" class="mt-2 fw-bold text-success text-center"></div>
+                                <h5 class="fw-bold text-dark mb-2"><i class="bi bi-key-fill text-warning me-2"></i>Gestor de Códigos</h5>
+                                <label class="small fw-bold">Seleccionar Grupo:</label>
+                                <select id="selectTipoCodigo" class="form-select form-select-sm mb-2">
+                                    <option value="Docentes">Docentes</option>
+                                    <option value="Estudiantes">Estudiantes</option>
+                                    <option value="Admin">Administrador</option>
+                                </select>
+                                <div class="d-flex gap-2">
+                                    <button class="btn btn-warning btn-sm fw-bold text-dark w-50" onclick="gestionarCodigo('generar')">Generar Nuevo</button>
+                                    <button class="btn btn-info btn-sm fw-bold text-white w-50" onclick="gestionarCodigo('recuperar')">Ver / Recuperar</button>
+                                </div>
+                                <div id="areaResultadosAdmin" class="mt-2 small fw-bold text-success text-center"></div>
                             </div>
                         </div>
-                        <!-- Modificar Textos de la Página -->
+                        <!-- Cambiar Clave Admin -->
                         <div class="col-md-6">
                             <div class="p-3 bg-light rounded border">
-                                <h5 class="fw-bold text-dark mb-2"><i class="bi bi-pencil-square text-primary me-2"></i>Editar Texto Principal</h5>
+                                <h5 class="fw-bold text-dark mb-2"><i class="bi bi-shield-lock text-danger me-2"></i>Cambiar Clave de Admin</h5>
                                 <div class="mb-2">
-                                    <input type="text" id="nuevoTitulo" class="form-control form-control-sm" placeholder="Nuevo título del banner">
+                                    <input type="text" id="nuevaClaveAdmin" class="form-control form-control-sm" placeholder="Nueva clave de administrador">
                                 </div>
-                                <button class="btn btn-primary fw-bold btn-sm w-100" onclick="cambiarTextoPagina()">Actualizar Página</button>
+                                <button class="btn btn-danger btn-sm fw-bold w-100" onclick="cambiarClaveAdmin()">Actualizar Clave</button>
                             </div>
                         </div>
                     </div>
@@ -238,7 +241,7 @@
             </div>
         </section>
 
-        <!-- TABLA GENERAL DE RESULTADOS (PARA ESTUDIANTE, DOCENTE Y ADMIN) -->
+        <!-- TABLA GENERAL DE RESULTADOS -->
         <div class="card shadow-sm border-0 mb-5">
             <div class="card-header bg-dark text-white py-3">
                 <h4 id="tituloTabla" class="fw-bold mb-0 text-center">Resultados de la Consulta</h4>
@@ -309,11 +312,9 @@
     <script>
         const URL_API = "https://script.google.com/macros/s/AKfycbxDvR0c3ayEZJan3lknr5_mcRNZ55yXfViWIX5TYVJstcAgs1jjGz-Xebt8ZGl-2iuN/exec";
 
-        // Códigos almacenados temporalmente o simulados (puedes agregar más en localStorage)
         function verificarDocente() {
             let codigo = document.getElementById("inputCodigoDocente").value.trim();
-            // Código predeterminado para pruebas: DOCENTE2026 (o códigos guardados)
-            let codigosGuardados = JSON.parse(localStorage.getItem("codigosDocentes") || '["DOCENTE2026"]');
+            let codigosGuardados = JSON.parse(localStorage.getItem("codigos_Docentes") || '["DOCENTE2026"]');
 
             if (codigosGuardados.includes(codigo)) {
                 document.getElementById("loginDocenteBox").style.display = "none";
@@ -325,9 +326,10 @@
         }
 
         function verificarAdmin() {
-            let clave = document.getElementById("inputClaveAdmin").value.trim();
-            // Clave predeterminada de administrador: AdminEden2026
-            if (clave === "AdminEden2026") {
+            let claveIngresada = document.getElementById("inputClaveAdmin").value.trim();
+            let claveGuardada = localStorage.getItem("claveAdmin") || "AdminEden2026";
+            
+            if (claveIngresada === claveGuardada) {
                 document.getElementById("loginAdminBox").style.display = "none";
                 document.getElementById("panelAdminAutorizado").style.display = "block";
                 alert("¡Bienvenido al Panel de Administrador!");
@@ -336,37 +338,53 @@
             }
         }
 
-        function generarCodigoDocente() {
-            let nuevoCodigo = "DOC-" + Math.floor(1000 + Math.random() * 9000);
-            let codigosGuardados = JSON.parse(localStorage.getItem("codigosDocentes") || '["DOCENTE2026"]');
-            codigosGuardados.push(nuevoCodigo);
-            localStorage.setItem("codigosDocentes", JSON.stringify(codigosGuardados));
-            document.getElementById("resultadoCodigo").innerText = `Código generado con éxito: ${nuevoCodigo}`;
-        }
-
-        function cambiarTextoPagina() {
-            let nuevoTitulo = document.getElementById("nuevoTitulo").value.trim();
-            if (nuevoTitulo) {
-                document.getElementById("banner-titulo").innerText = nuevoTitulo;
-                alert("¡Sección de la página actualizada correctamente!");
+        function gestionarCodigo(accion) {
+            let tipo = document.getElementById("selectTipoCodigo").value;
+            let storageKey = "codigos_" + tipo;
+            let area = document.getElementById("areaResultadosAdmin");
+            
+            if (accion === 'generar') {
+                let prefijo = tipo === 'Docentes' ? 'DOC' : (tipo === 'Estudiantes' ? 'EST' : 'ADM');
+                let nuevoCodigo = prefijo + "-" + Math.floor(1000 + Math.random() * 9000);
+                let lista = JSON.parse(localStorage.getItem(storageKey) || "[]");
+                lista.push(nuevoCodigo);
+                localStorage.setItem(storageKey, JSON.stringify(lista));
+                area.innerHTML = `Código generado para ${tipo}: <span class="text-success">${nuevoCodigo}</span>`;
             } else {
-                alert("Por favor ingrese un texto válido.");
+                let lista = JSON.parse(localStorage.getItem(storageKey) || "[]");
+                if (tipo === 'Admin') {
+                    let claveActual = localStorage.getItem("claveAdmin") || "AdminEden2026";
+                    area.innerHTML = `Clave actual: <b>${claveActual}</b> <br> Extras: ${lista.join(", ") || 'Ninguno'}`;
+                } else {
+                    area.innerHTML = `Códigos de ${tipo}: <br> <b>${lista.length > 0 ? lista.join(", ") : 'No hay registros.'}</b>`;
+                }
             }
         }
 
-        async function consultarEstudiantePorNie() {
-            let nie = document.getElementById("inputNie").value.trim();
+        function cambiarClaveAdmin() {
+            let nuevaClave = document.getElementById("nuevaClaveAdmin").value.trim();
+            if (nuevaClave.length >= 4) {
+                localStorage.setItem("claveAdmin", nuevaClave);
+                alert("¡Clave de administrador actualizada con éxito!");
+                document.getElementById("nuevaClaveAdmin").value = "";
+            } else {
+                alert("La clave debe tener al menos 4 caracteres.");
+            }
+        }
+
+        async function consultarEstudiantePorCodigo() {
+            let codigoEstudiante = document.getElementById("inputCodigoEstudiante").value.trim();
             let pestana = document.getElementById("selectPestanaEstudiante").value;
             let titulo = document.getElementById("tituloTabla");
             let tablaHead = document.getElementById("tablaHead");
             let tablaBody = document.getElementById("tablaBody");
 
-            if (!nie) {
-                alert("Por favor ingrese su número de NIE.");
+            if (!codigoEstudiante) {
+                alert("Por favor ingrese el código de estudiante.");
                 return;
             }
 
-            titulo.innerText = `Buscando NIE ${nie} en ${pestana}...`;
+            titulo.innerText = `Buscando código ${codigoEstudiante} en ${pestana}...`;
             tablaHead.innerHTML = "";
             tablaBody.innerHTML = `<tr><td colspan="5" class="py-4"><div class="spinner-border text-primary" role="status"></div> Conectando...</td></tr>`;
 
@@ -380,16 +398,17 @@
                 }
 
                 let llaves = Object.keys(datos[0]);
-                let columnaNie = llaves.find(k => k.toLowerCase().includes('nie')) || llaves[0];
-                let filtrados = datos.filter(row => String(row[columnaNie]).trim() === nie);
+                let columnaCodigo = llaves.find(k => k.toLowerCase().includes('codigo') || k.toLowerCase().includes('id') || k.toLowerCase().includes('matricula') || k.toLowerCase().includes('nie')) || llaves[0];
+
+                let filtrados = datos.filter(row => String(row[columnaCodigo]).trim().toLowerCase() === codigoEstudiante.toLowerCase());
 
                 if (filtrados.length === 0) {
-                    titulo.innerText = `Resultado para NIE: ${nie}`;
-                    tablaBody.innerHTML = `<tr><td colspan='5' class='text-warning fw-bold py-3'>No se encontró información con el NIE "${nie}".</td></tr>`;
+                    titulo.innerText = `Resultado para código: ${codigoEstudiante}`;
+                    tablaBody.innerHTML = `<tr><td colspan='5' class='text-warning fw-bold py-3'>No se encontró información con el código "${codigoEstudiante}".</td></tr>`;
                     return;
                 }
 
-                titulo.innerText = `Resultados para el NIE: ${nie} (${pestana})`;
+                titulo.innerText = `Resultados para el Código: ${codigoEstudiante} (${pestana})`;
                 let headHtml = "<tr>";
                 llaves.forEach(k => headHtml += `<th>${k}</th>`);
                 headHtml += "</tr>";
@@ -405,7 +424,7 @@
 
             } catch (error) {
                 titulo.innerText = "Error de Conexión";
-                tablaBody.innerHTML = "<tr><td colspan='5' class='text-danger py-3'>Error al conectar con Google Sheets.</td></tr>";
+                tablaBody.innerHTML = "<tr><td colspan='5' class='text-danger py-3'>No se pudo conectar. Asegúrese de que su Apps Script esté publicado como Aplicación Web abierta a todos ('Anyone').</td></tr>";
             }
         }
 
