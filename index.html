@@ -9,19 +9,9 @@
     <!-- Iconos de Bootstrap -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <style>
-      .actividad-img {
-        height: 200px;
-        object-fit: cover;
-      }
-      .btn-whatsapp {
-        background-color: #25D366;
-        color: #fff;
-        font-weight: bold;
-      }
-      .btn-whatsapp:hover {
-        background-color: #1da851;
-        color: #fff;
-      }
+      .btn-whatsapp { background-color: #25D366; color: #fff; font-weight: bold; }
+      .btn-whatsapp:hover { background-color: #1da851; color: #fff; }
+      .panel-oculto { display: none; }
     </style>
 </head>
 <body class="bg-light">
@@ -42,13 +32,22 @@
             <li class="nav-item"><a class="nav-link" href="#oferta-academica">Oferta Académica</a></li>
             <li class="nav-item"><a class="nav-link" href="#galeria-actividades">Actividades</a></li>
             <li class="nav-item"><a class="nav-link" href="#contacto">Contacto</a></li>
-            <!-- ENLACE A GOOGLE CLASSROOM -->
             <li class="nav-item ms-lg-2">
-              <a class="btn btn-outline-success btn-sm fw-bold text-white d-flex align-items-center gap-1" href="https://classroom.google.com" target="_blank" title="Ir a Aula Virtual Google Classroom">
+              <a class="btn btn-outline-success btn-sm fw-bold text-white d-flex align-items-center gap-1" href="https://classroom.google.com" target="_blank">
                 <i class="bi bi-google text-warning"></i> Classroom
               </a>
             </li>
-            <li class="nav-item ms-lg-1"><a class="btn btn-warning btn-sm fw-bold text-dark" href="#consulta-bd"><i class="bi bi-database-fill me-1"></i> Consultar Sistema</a></li>
+            <li class="nav-item dropdown">
+              <a class="btn btn-warning btn-sm fw-bold text-dark dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                <i class="bi bi-shield-lock-fill me-1"></i> Portales de Acceso
+              </a>
+              <ul class="dropdown-menu dropdown-menu-end">
+                <li><a class="dropdown-item" href="#portal-estudiante"><i class="bi bi-person-badge me-2"></i>Acceso Estudiantes (NIE)</a></li>
+                <li><a class="dropdown-item" href="#portal-docente"><i class="bi bi-person-workspace me-2"></i>Acceso Docentes</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item text-danger fw-bold" href="#portal-admin"><i class="bi bi-gear-fill me-2"></i>Acceso Administrador</a></li>
+              </ul>
+            </li>
           </ul>
         </div>
       </div>
@@ -57,8 +56,8 @@
     <!-- BANNER PRINCIPAL -->
     <header class="bg-primary text-white text-center py-5 shadow-sm" style="background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);">
       <div class="container py-3">
-        <h1 class="display-5 fw-bold mb-3">Educando con Principios y Excelencia</h1>
-        <p class="lead mb-4 col-md-8 mx-auto">Formamos a la niñez y juventud con valores cristianos, alto nivel académico y competencias tecnológicas en El Salvador.</p>
+        <h1 id="banner-titulo" class="display-5 fw-bold mb-3">Educando con Principios y Excelencia</h1>
+        <p id="banner-subtitulo" class="lead mb-4 col-md-8 mx-auto">Formamos a la niñez y juventud con valores cristianos, alto nivel académico y competencias tecnológicas en El Salvador.</p>
         <div class="d-flex justify-content-center gap-3">
           <a href="#oferta-academica" class="btn btn-warning btn-lg fw-bold px-4 text-dark">Conoce la Oferta</a>
           <a href="#contacto" class="btn btn-outline-light btn-lg fw-bold px-4">Contactar</a>
@@ -68,35 +67,20 @@
 
     <div class="container my-5">
 
-        <!-- SECCIÓN: QUIÉNES SOMOS / MISION / VISION -->
+        <!-- QUIÉNES SOMOS -->
         <section id="nosotros" class="mb-5 pt-3">
             <div class="row align-items-center g-4">
                 <div class="col-md-6">
                     <span class="badge bg-primary fs-6 mb-2">Identidad Institucional</span>
                     <h2 class="fw-bold text-dark mb-3">¿Quiénes Somos?</h2>
-                    <p class="text-secondary lead fs-6">
-                        El <strong>Colegio Evangélico El Edén</strong> es una institución orientada al desarrollo integral de los estudiantes. Buscamos fomentar una visión transformadora basada en principios morales sólidos, excelencia educativa y herramientas tecnológicas de vanguardia.
+                    <p id="texto-nosotros" class="text-secondary lead fs-6">
+                        El <strong>Colegio Evangélico El Edén</strong> es una institución orientada al desarrollo integral de los estudiantes, fomentando principios morales y excelencia educativa.
                     </p>
-                    <div class="row g-3 mt-2">
-                        <div class="col-6">
-                            <div class="border-start border-4 border-warning ps-3">
-                                <h6 class="fw-bold mb-1"><i class="bi bi-eye-fill text-warning me-1"></i> Misión</h6>
-                                <p class="small text-muted mb-0">Ofrecer educación integral con bases bíblicas y excelencia académica para transformar vidas.</p>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="border-start border-4 border-info ps-3">
-                                <h6 class="fw-bold mb-1"><i class="bi bi-compass-fill text-info me-1"></i> Visión</h6>
-                                <p class="small text-muted mb-0">Ser un referente educativo reconocido por la calidad moral, científica y espiritual de nuestros graduados.</p>
-                            </div>
-                        </div>
-                    </div>
                 </div>
                 <div class="col-md-6 text-center">
                     <div class="p-4 bg-white rounded shadow-sm border border-light">
-                        <img src="https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=600&q=80" alt="Instalaciones del Colegio" class="img-fluid rounded mb-3 shadow-sm" style="max-height: 250px; width: 100%; object-fit: cover;">
+                        <img src="https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=600&q=80" alt="Instalaciones" class="img-fluid rounded mb-3 shadow-sm" style="max-height: 250px; width: 100%; object-fit: cover;">
                         <h5 class="fw-bold text-dark">Ambiente Seguro y Cristiano</h5>
-                        <p class="text-muted small mb-0">Atención personalizada y personal docente altamente capacitado.</p>
                     </div>
                 </div>
             </div>
@@ -104,36 +88,29 @@
 
         <hr class="my-5">
 
-        <!-- SECCIÓN: OFERTA ACADÉMICA -->
+        <!-- OFERTA ACADÉMICA -->
         <section id="oferta-academica" class="mb-5 pt-3">
             <div class="text-center mb-4">
-                <span class="badge bg-warning text-dark fs-6 mb-2">Proceso de Admisión</span>
+                <span class="badge bg-warning text-dark fs-6 mb-2">Admisión</span>
                 <h2 class="fw-bold">Nuestra Oferta Académica</h2>
-                <p class="text-muted">Programas educativos adaptados a las exigencias del currículo nacional</p>
             </div>
             <div class="row g-4">
                 <div class="col-md-4">
-                    <div class="card h-100 shadow-sm border-0">
-                        <div class="card-body">
-                            <h5 class="fw-bold text-primary"><i class="bi bi-puzzle-fill me-2"></i>Parvularia</h5>
-                            <p class="text-muted small">Atención integral para la primera infancia con estímulos tempranos, valores y bases de lectoescritura.</p>
-                        </div>
+                    <div class="card h-100 shadow-sm border-0 p-3">
+                        <h5 class="fw-bold text-primary"><i class="bi bi-puzzle-fill me-2"></i>Parvularia</h5>
+                        <p class="text-muted small">Atención integral para la primera infancia con valores y bases de lectoescritura.</p>
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <div class="card h-100 shadow-sm border-0">
-                        <div class="card-body">
-                            <h5 class="fw-bold text-primary"><i class="bi bi-book-fill me-2"></i>Educación Básica (I y II Ciclo)</h5>
-                            <p class="text-muted small">De 1° a 6° grado fortaleciendo el pensamiento lógico-matemático, comprensión lectora y ciencias.</p>
-                        </div>
+                    <div class="card h-100 shadow-sm border-0 p-3">
+                        <h5 class="fw-bold text-primary"><i class="bi bi-book-fill me-2"></i>Educación Básica (I y II Ciclo)</h5>
+                        <p class="text-muted small">De 1° a 6° grado fortaleciendo el pensamiento lógico y comprensión lectora.</p>
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <div class="card h-100 shadow-sm border-0">
-                        <div class="card-body">
-                            <h5 class="fw-bold text-primary"><i class="bi bi-laptop-fill me-2"></i>III Ciclo de Educación Básica</h5>
-                            <p class="text-muted small">De 7° a 9° grado preparando al estudiante con laboratorios científicos y competencias digitales avanzadas.</p>
-                        </div>
+                    <div class="card h-100 shadow-sm border-0 p-3">
+                        <h5 class="fw-bold text-primary"><i class="bi bi-laptop-fill me-2"></i>III Ciclo</h5>
+                        <p class="text-muted small">De 7° a 9° grado preparando al estudiante con laboratorios y competencias digitales.</p>
                     </div>
                 </div>
             </div>
@@ -141,125 +118,178 @@
 
         <hr class="my-5">
 
-        <!-- SECCIÓN: ACTIVIDADES Y EVENTOS -->
-        <section id="galeria-actividades" class="mb-5 pt-3">
-            <div class="text-center mb-4">
-                <span class="badge bg-success fs-6 mb-2">Vida Estudiantil</span>
-                <h2 class="fw-bold">Galería de Actividades y Eventos</h2>
-                <p class="text-muted">Momentos destacados de nuestra comunidad escolar</p>
+        <!-- SECCIÓN 1: PORTAL DE ESTUDIANTES (POR NIE) -->
+        <section id="portal-estudiante" class="mb-5 pt-3">
+            <div class="card shadow-sm border-0 p-4 bg-white">
+                <div class="text-center mb-3">
+                    <span class="badge bg-primary fs-6 mb-1">Estudiantes</span>
+                    <h3 class="fw-bold">Portal de Consulta por NIE</h3>
+                    <p class="text-muted small">Ingrese su número de NIE para consultar su información académica.</p>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold">Número de NIE:</label>
+                        <input type="text" id="inputNie" class="form-control" placeholder="Ej: 12345678">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold">Sección a Consultar:</label>
+                        <select id="selectPestanaEstudiante" class="form-select">
+                            <option value="Estudiantes">Datos del Estudiante</option>
+                            <option value="Calificaciones">Calificaciones</option>
+                            <option value="Asistencia">Asistencia</option>
+                            <option value="Conducta">Conducta</option>
+                        </select>
+                    </div>
+                </div>
+                <button class="btn btn-primary fw-bold w-100" onclick="consultarEstudiantePorNie()">
+                    <i class="bi bi-search me-1"></i> Consultar Mis Datos
+                </button>
             </div>
-            <div class="row g-4">
-                <div class="col-md-4">
-                    <div class="card shadow-sm border-0 h-100">
-                        <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=500&q=80" class="card-img-top actividad-img" alt="Feria Científica">
-                        <div class="card-body">
-                            <h6 class="fw-bold text-dark">Feria Científica Anual</h6>
-                            <p class="small text-muted mb-0">Estudiantes presentando experimentos y proyectos tecnológicos aplicados.</p>
-                        </div>
+        </section>
+
+        <!-- SECCIÓN 2: PORTAL DE DOCENTES (POR CÓDIGO) -->
+        <section id="portal-docente" class="mb-5 pt-3">
+            <div class="card shadow-sm border-0 p-4 bg-white border-start border-4 border-success">
+                <div class="text-center mb-3">
+                    <span class="badge bg-success fs-6 mb-1">Docentes</span>
+                    <h3 class="fw-bold">Acceso para Docentes</h3>
+                    <p class="text-muted small">Ingrese el código de acceso proporcionado por la administración escolar.</p>
+                </div>
+                <div id="loginDocenteBox" class="row justify-content-center">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold">Código de Docente:</label>
+                        <input type="password" id="inputCodigoDocente" class="form-control" placeholder="Ingrese su código">
+                    </div>
+                    <div class="col-12 text-center">
+                        <button class="btn btn-success fw-bold px-5" onclick="verificarDocente()">Ingresar como Docente</button>
                     </div>
                 </div>
-                <div class="col-md-4">
-                    <div class="card shadow-sm border-0 h-100">
-                        <img src="https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=500&q=80" class="card-img-top actividad-img" alt="Clases Dinámicas">
-                        <div class="card-body">
-                            <h6 class="fw-bold text-dark">Innovación en el Aula</h6>
-                            <p class="small text-muted mb-0">Ambientes interactivos de aprendizaje respaldados con herramientas digitales.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card shadow-sm border-0 h-100">
-                        <img src="https://images.unsplash.com/photo-1543269865-cbf427effbad?auto=format&fit=crop&w=500&q=80" class="card-img-top actividad-img" alt="Actividades Deportivas">
-                        <div class="card-body">
-                            <h6 class="fw-bold text-dark">Jornadas Deportivas y Cívicas</h6>
-                            <p class="small text-muted mb-0">Fomento de la sana convivencia, disciplina, compañerismo y valores patrios.</p>
-                        </div>
+                <!-- Panel interno para Docente autorizado -->
+                <div id="panelDocenteAutorizado" class="panel-oculto">
+                    <div class="alert alert-success text-center fw-bold">¡Acceso concedido a Docente!</div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Seleccione Base de Datos / Pestaña a visualizar:</label>
+                        <select id="selectPestanaDocente" class="form-select mb-3">
+                            <option value="Estudiantes">Estudiantes</option>
+                            <option value="Calificaciones">Calificaciones</option>
+                            <option value="Asistencia">Asistencia</option>
+                            <option value="Conducta">Conducta</option>
+                        </select>
+                        <button class="btn btn-dark fw-bold w-100" onclick="cargarDatosGenerales('Docente')">Ver Registros Completos</button>
                     </div>
                 </div>
             </div>
         </section>
 
+        <!-- SECCIÓN 3: PORTAL DE ADMINISTRADOR -->
+        <section id="portal-admin" class="mb-5 pt-3">
+            <div class="card shadow-sm border-0 p-4 bg-white border-start border-4 border-danger">
+                <div class="text-center mb-3">
+                    <span class="badge bg-danger fs-6 mb-1">Administración</span>
+                    <h3 class="fw-bold">Panel de Administrador</h3>
+                    <p class="text-muted small">Acceso restringido para control total y gestión institucional.</p>
+                </div>
+                <div id="loginAdminBox" class="row justify-content-center">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold">Clave de Administrador:</label>
+                        <input type="password" id="inputClaveAdmin" class="form-control" placeholder="Contraseña de admin">
+                    </div>
+                    <div class="col-12 text-center">
+                        <button class="btn btn-danger fw-bold px-5" onclick="verificarAdmin()">Ingresar como Administrador</button>
+                    </div>
+                </div>
+                <!-- Panel interno para Administrador autorizado -->
+                <div id="panelAdminAutorizado" class="panel-oculto">
+                    <div class="alert alert-danger text-center fw-bold"><i class="bi bi-shield-fill-check me-2"></i>¡Panel de Administrador Activo!</div>
+                    
+                    <div class="row g-4 mb-4">
+                        <!-- Generar Códigos para Docentes -->
+                        <div class="col-md-6">
+                            <div class="p-3 bg-light rounded border">
+                                <h5 class="fw-bold text-dark mb-2"><i class="bi bi-key-fill text-warning me-2"></i>Generar Código Docente</h5>
+                                <p class="small text-muted">Cree un código seguro para un nuevo docente.</p>
+                                <button class="btn btn-warning fw-bold text-dark w-100" onclick="generarCodigoDocente()">Generar Nuevo Código</button>
+                                <div id="resultadoCodigo" class="mt-2 fw-bold text-success text-center"></div>
+                            </div>
+                        </div>
+                        <!-- Modificar Textos de la Página -->
+                        <div class="col-md-6">
+                            <div class="p-3 bg-light rounded border">
+                                <h5 class="fw-bold text-dark mb-2"><i class="bi bi-pencil-square text-primary me-2"></i>Editar Texto Principal</h5>
+                                <div class="mb-2">
+                                    <input type="text" id="nuevoTitulo" class="form-control form-control-sm" placeholder="Nuevo título del banner">
+                                </div>
+                                <button class="btn btn-primary fw-bold btn-sm w-100" onclick="cambiarTextoPagina()">Actualizar Página</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Consulta Total de Registros:</label>
+                        <select id="selectPestanaAdmin" class="form-select mb-2">
+                            <option value="Estudiantes">Estudiantes</option>
+                            <option value="Calificaciones">Calificaciones</option>
+                            <option value="Asistencia">Asistencia</option>
+                            <option value="Conducta">Conducta</option>
+                        </select>
+                        <button class="btn btn-dark fw-bold w-100" onclick="cargarDatosGenerales('Admin')">Ver y Gestionar Toda la Base de Datos</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TABLA GENERAL DE RESULTADOS (PARA ESTUDIANTE, DOCENTE Y ADMIN) -->
+        <div class="card shadow-sm border-0 mb-5">
+            <div class="card-header bg-dark text-white py-3">
+                <h4 id="tituloTabla" class="fw-bold mb-0 text-center">Resultados de la Consulta</h4>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped align-middle text-center" id="tablaDatos">
+                        <thead class="table-secondary" id="tablaHead"></thead>
+                        <tbody id="tablaBody">
+                            <tr><td colspan="5" class="text-muted py-4">Seleccione su método de acceso y realice una consulta.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
         <hr class="my-5">
 
-        <!-- SECCIÓN: CONTACTO Y ENLACE DIRECTO A WHATSAPP -->
+        <!-- CONTACTO Y WHATSAPP -->
         <section id="contacto" class="mb-5 pt-3">
             <div class="text-center mb-4">
                 <span class="badge bg-primary fs-6 mb-2">Canal Directo</span>
-                <h2 class="fw-bold">Datos de Contacto y WhatsApp</h2>
-                <p class="text-muted">¿Tienes dudas sobre matrículas, notas o procesos? Escríbenos directamente al WhatsApp institucional.</p>
+                <h2 class="fw-bold">Contacto Institucional y WhatsApp</h2>
             </div>
-            <div class="row g-4 justify-content-center align-items-center">
+            <div class="row g-4 justify-content-center">
                 <div class="col-md-5">
                     <div class="card border-0 shadow-sm p-4 h-100">
-                        <h5 class="fw-bold text-dark mb-3"><i class="bi bi-geo-alt-fill text-danger me-2"></i>Información Institucional</h5>
+                        <h5 class="fw-bold text-dark mb-3"><i class="bi bi-geo-alt-fill text-danger me-2"></i>Información</h5>
                         <p class="mb-2"><strong>Dirección:</strong> San Salvador, El Salvador</p>
-                        <p class="mb-2"><strong>Teléfono Principal:</strong> +503 2200-0000</p>
-                        <p class="mb-2"><strong>Correo Electrónico:</strong> info@colegioeleden.edu.sv</p>
-                        <p class="mb-2"><strong>WhatsApp Oficial:</strong> <span class="fw-bold text-success">+503 7598-2371</span></p>
-                        <p class="mb-0 text-muted small"><strong>Horario de atención:</strong> Lunes a Viernes de 7:00 AM - 4:00 PM</p>
+                        <p class="mb-2"><strong>Teléfono:</strong> +503 2200-0000</p>
+                        <p class="mb-0"><strong>WhatsApp:</strong> <span class="fw-bold text-success">+503 7598-2371</span></p>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="card border-0 shadow-sm p-4 h-100 bg-white">
-                        <h5 class="fw-bold text-dark mb-3"><i class="bi bi-whatsapp text-success me-2"></i>Escríbenos al WhatsApp del Colegio</h5>
+                        <h5 class="fw-bold text-dark mb-3"><i class="bi bi-whatsapp text-success me-2"></i>Escríbenos al WhatsApp</h5>
                         <form onsubmit="enviarWhatsAppDirecto(event)">
                             <div class="mb-2">
-                                <label class="form-label small fw-bold">Tu Nombre Completo:</label>
-                                <input type="text" id="wsNombre" class="form-control form-control-sm" placeholder="Ej: Juan Pérez" required>
+                                <label class="form-label small fw-bold">Nombre:</label>
+                                <input type="text" id="wsNombre" class="form-control form-control-sm" required>
                             </div>
                             <div class="mb-2">
-                                <label class="form-label small fw-bold">Grado de Interés / Consulta:</label>
-                                <select id="wsGrado" class="form-select form-select-sm" required>
-                                    <option value="Parvularia">Parvularia</option>
-                                    <option value="1° a 3° Grado">I Ciclo (1° a 3° Grado)</option>
-                                    <option value="4° a 6° Grado">II Ciclo (4° a 6° Grado)</option>
-                                    <option value="7° a 9° Grado">III Ciclo (7° a 9° Grado)</option>
-                                </select>
+                                <label class="form-label small fw-bold">Grado:</label>
+                                <input type="text" id="wsGrado" class="form-control form-control-sm" required>
                             </div>
                             <div class="mb-3">
                                 <label class="form-label small fw-bold">Mensaje:</label>
-                                <textarea id="wsMensaje" class="form-control form-control-sm" rows="3" placeholder="Hola, deseo información sobre cuotas y requisitos de inscripción." required></textarea>
+                                <textarea id="wsMensaje" class="form-control form-control-sm" rows="2" required></textarea>
                             </div>
-                            <button type="submit" class="btn btn-whatsapp w-100 fw-bold">
-                                <i class="bi bi-whatsapp me-2"></i> Abrir Chat de WhatsApp
-                            </button>
+                            <button type="submit" class="btn btn-whatsapp w-100 fw-bold">Abrir Chat</button>
                         </form>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <hr class="my-5">
-
-        <!-- SECCIÓN: CONSULTA DE BASE DE DATOS -->
-        <section id="consulta-bd" class="mb-5 pt-3">
-            <div class="text-center mb-4">
-                <span class="badge bg-danger fs-6 mb-2">Sistema Educativo en la Nube</span>
-                <h2 class="fw-bold">Consulta de Registros</h2>
-                <p class="text-muted">Haz clic en cualquiera de las 4 pestañas exactas para consultar los datos almacenados en tiempo real:</p>
-            </div>
-
-            <!-- Botones de las 4 pestañas -->
-            <div class="d-flex justify-content-center flex-wrap gap-2 mb-4">
-                <button class="btn btn-primary fw-bold px-4" onclick="cargarDatos('Estudiantes')"><i class="bi bi-people-fill me-1"></i> Estudiantes</button>
-                <button class="btn btn-success fw-bold px-4" onclick="cargarDatos('Calificaciones')"><i class="bi bi-award-fill me-1"></i> Calificaciones</button>
-                <button class="btn btn-warning fw-bold px-4 text-dark" onclick="cargarDatos('Asistencia')"><i class="bi bi-calendar-check-fill me-1"></i> Asistencia</button>
-                <button class="btn btn-danger fw-bold px-4" onclick="cargarDatos('Conducta')"><i class="bi bi-shield-exclamation me-1"></i> Conducta</button>
-            </div>
-
-            <!-- Tarjeta de Visualización de Resultados -->
-            <div class="card shadow-sm border-0">
-                <div class="card-header bg-white py-3">
-                    <h4 id="tituloTabla" class="fw-bold text-secondary mb-0">Seleccione una pestaña arriba</h4>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-striped align-middle text-center" id="tablaDatos">
-                            <thead class="table-dark" id="tablaHead"></thead>
-                            <tbody id="tablaBody">
-                                <tr><td colspan="5" class="text-muted py-4">Los datos de Google Sheets aparecerán aquí.</td></tr>
-                            </tbody>
-                        </table>
                     </div>
                 </div>
             </div>
@@ -271,7 +301,6 @@
     <footer class="bg-dark text-white text-center py-4 mt-5">
         <div class="container">
             <p class="mb-1 fw-bold">Colegio Evangélico El Edén &copy; 2026</p>
-            <p class="small text-muted mb-0">Portal educativo desarrollado con herramientas libres y gratuitas.</p>
         </div>
     </footer>
 
@@ -280,58 +309,153 @@
     <script>
         const URL_API = "https://script.google.com/macros/s/AKfycbxDvR0c3ayEZJan3lknr5_mcRNZ55yXfViWIX5TYVJstcAgs1jjGz-Xebt8ZGl-2iuN/exec";
 
-        function enviarWhatsAppDirecto(event) {
-            event.preventDefault();
-            let nombre = document.getElementById('wsNombre').value;
-            let grado = document.getElementById('wsGrado').value;
-            let mensaje = document.getElementById('wsMensaje').value;
-            
-            let telefonoColegio = "50375982371"; 
-            let textoUrl = `Hola, mi nombre es ${nombre}. Me interesa información para el grado ${grado}. Mensaje: ${mensaje}`;
-            
-            window.open(`https://wa.me/${telefonoColegio}?text=${encodeURIComponent(textoUrl)}`, '_blank');
+        // Códigos almacenados temporalmente o simulados (puedes agregar más en localStorage)
+        function verificarDocente() {
+            let codigo = document.getElementById("inputCodigoDocente").value.trim();
+            // Código predeterminado para pruebas: DOCENTE2026 (o códigos guardados)
+            let codigosGuardados = JSON.parse(localStorage.getItem("codigosDocentes") || '["DOCENTE2026"]');
+
+            if (codigosGuardados.includes(codigo)) {
+                document.getElementById("loginDocenteBox").style.display = "none";
+                document.getElementById("panelDocenteAutorizado").style.display = "block";
+                alert("¡Código de docente válido!");
+            } else {
+                alert("Código de docente incorrecto o inválido.");
+            }
         }
 
-        async function cargarDatos(pestana) {
+        function verificarAdmin() {
+            let clave = document.getElementById("inputClaveAdmin").value.trim();
+            // Clave predeterminada de administrador: AdminEden2026
+            if (clave === "AdminEden2026") {
+                document.getElementById("loginAdminBox").style.display = "none";
+                document.getElementById("panelAdminAutorizado").style.display = "block";
+                alert("¡Bienvenido al Panel de Administrador!");
+            } else {
+                alert("Clave de administrador incorrecta.");
+            }
+        }
+
+        function generarCodigoDocente() {
+            let nuevoCodigo = "DOC-" + Math.floor(1000 + Math.random() * 9000);
+            let codigosGuardados = JSON.parse(localStorage.getItem("codigosDocentes") || '["DOCENTE2026"]');
+            codigosGuardados.push(nuevoCodigo);
+            localStorage.setItem("codigosDocentes", JSON.stringify(codigosGuardados));
+            document.getElementById("resultadoCodigo").innerText = `Código generado con éxito: ${nuevoCodigo}`;
+        }
+
+        function cambiarTextoPagina() {
+            let nuevoTitulo = document.getElementById("nuevoTitulo").value.trim();
+            if (nuevoTitulo) {
+                document.getElementById("banner-titulo").innerText = nuevoTitulo;
+                alert("¡Sección de la página actualizada correctamente!");
+            } else {
+                alert("Por favor ingrese un texto válido.");
+            }
+        }
+
+        async function consultarEstudiantePorNie() {
+            let nie = document.getElementById("inputNie").value.trim();
+            let pestana = document.getElementById("selectPestanaEstudiante").value;
             let titulo = document.getElementById("tituloTabla");
             let tablaHead = document.getElementById("tablaHead");
             let tablaBody = document.getElementById("tablaBody");
 
-            titulo.innerText = `Cargando ${pestana}...`;
+            if (!nie) {
+                alert("Por favor ingrese su número de NIE.");
+                return;
+            }
+
+            titulo.innerText = `Buscando NIE ${nie} en ${pestana}...`;
             tablaHead.innerHTML = "";
-            tablaBody.innerHTML = `<tr><td colspan="5" class="py-4"><div class="spinner-border text-primary" role="status"></div> Conectando con la base de datos...</td></tr>`;
+            tablaBody.innerHTML = `<tr><td colspan="5" class="py-4"><div class="spinner-border text-primary" role="status"></div> Conectando...</td></tr>`;
 
             try {
                 let respuesta = await fetch(`${URL_API}?pestana=${pestana}`);
                 let datos = await respuesta.json();
                 
-                titulo.innerText = `Registro de la pestaña: ${pestana}`;
-                
                 if (datos.length === 0) {
-                    tablaHead.innerHTML = "";
-                    tablaBody.innerHTML = "<tr><td colspan='5' class='text-center text-danger fw-bold py-3'>No hay registros en esta pestaña.</td></tr>";
+                    tablaBody.innerHTML = "<tr><td colspan='5' class='text-danger py-3'>No hay registros.</td></tr>";
                     return;
                 }
 
-                let keys = Object.keys(datos[0]);
+                let llaves = Object.keys(datos[0]);
+                let columnaNie = llaves.find(k => k.toLowerCase().includes('nie')) || llaves[0];
+                let filtrados = datos.filter(row => String(row[columnaNie]).trim() === nie);
+
+                if (filtrados.length === 0) {
+                    titulo.innerText = `Resultado para NIE: ${nie}`;
+                    tablaBody.innerHTML = `<tr><td colspan='5' class='text-warning fw-bold py-3'>No se encontró información con el NIE "${nie}".</td></tr>`;
+                    return;
+                }
+
+                titulo.innerText = `Resultados para el NIE: ${nie} (${pestana})`;
                 let headHtml = "<tr>";
-                keys.forEach(k => headHtml += `<th>${k}</th>`);
+                llaves.forEach(k => headHtml += `<th>${k}</th>`);
+                headHtml += "</tr>";
+                tablaHead.innerHTML = headHtml;
+
+                let bodyHtml = "";
+                filtrados.forEach(row => {
+                    bodyHtml += "<tr>";
+                    llaves.forEach(k => bodyHtml += `<td>${row[k] !== undefined ? row[k] : ''}</td>`);
+                    bodyHtml += "</tr>";
+                });
+                tablaBody.innerHTML = bodyHtml;
+
+            } catch (error) {
+                titulo.innerText = "Error de Conexión";
+                tablaBody.innerHTML = "<tr><td colspan='5' class='text-danger py-3'>Error al conectar con Google Sheets.</td></tr>";
+            }
+        }
+
+        async function cargarDatosGenerales(rol) {
+            let pestana = (rol === 'Docente') ? document.getElementById("selectPestanaDocente").value : document.getElementById("selectPestanaAdmin").value;
+            let titulo = document.getElementById("tituloTabla");
+            let tablaHead = document.getElementById("tablaHead");
+            let tablaBody = document.getElementById("tablaBody");
+
+            titulo.innerText = `Cargando base de datos (${pestana}) para ${rol}...`;
+            tablaHead.innerHTML = "";
+            tablaBody.innerHTML = `<tr><td colspan="5" class="py-4"><div class="spinner-border text-dark" role="status"></div> Cargando registros...</td></tr>`;
+
+            try {
+                let respuesta = await fetch(`${URL_API}?pestana=${pestana}`);
+                let datos = await respuesta.json();
+
+                if (datos.length === 0) {
+                    tablaBody.innerHTML = "<tr><td colspan='5' class='text-danger py-3'>La pestaña está vacía.</td></tr>";
+                    return;
+                }
+
+                titulo.innerText = `Registros Totales de ${pestana} (Vista de ${rol})`;
+                let llaves = Object.keys(datos[0]);
+                let headHtml = "<tr>";
+                llaves.forEach(k => headHtml += `<th>${k}</th>`);
                 headHtml += "</tr>";
                 tablaHead.innerHTML = headHtml;
 
                 let bodyHtml = "";
                 datos.forEach(row => {
                     bodyHtml += "<tr>";
-                    keys.forEach(k => bodyHtml += `<td>${row[k] !== undefined ? row[k] : ''}</td>`);
+                    llaves.forEach(k => bodyHtml += `<td>${row[k] !== undefined ? row[k] : ''}</td>`);
                     bodyHtml += "</tr>";
                 });
                 tablaBody.innerHTML = bodyHtml;
 
             } catch (error) {
-                console.error("Error:", error);
                 titulo.innerText = "Error de Conexión";
-                tablaBody.innerHTML = "<tr><td colspan='5' class='text-danger fw-bold py-3'>No se pudo conectar con el servidor. Verifica que la URL de Apps Script sea correcta.</td></tr>";
+                tablaBody.innerHTML = "<tr><td colspan='5' class='text-danger py-3'>No se pudo obtener la información.</td></tr>";
             }
+        }
+
+        function enviarWhatsAppDirecto(event) {
+            event.preventDefault();
+            let nombre = document.getElementById('wsNombre').value;
+            let grado = document.getElementById('wsGrado').value;
+            let mensaje = document.getElementById('wsMensaje').value;
+            let telefonoColegio = "50375982371"; 
+            window.open(`https://wa.me/${telefonoColegio}?text=${encodeURIComponent(`Hola, soy ${nombre} de ${grado}. ${mensaje}`)}`, '_blank');
         }
     </script>
 </body>
