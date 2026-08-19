@@ -254,6 +254,7 @@
                             <div class="col-md-8">
                                 <select id="selectPestanaAdmin" class="form-select">
                                     <option value="Estudiantes">Estudiantes</option>
+                                    <option value="Docentes">Docentes</option>
                                     <option value="Calificaciones">Calificaciones</option>
                                     <option value="Asistencia">Asistencia</option>
                                     <option value="Conducta">Conducta</option>
@@ -380,6 +381,7 @@
           </div>
           <div class="modal-body">
             <form onsubmit="ejecutarCambioPass(event)">
+                <input type="hidden" id="passModalTipo" value="Estudiantes">
                 <div class="mb-3">
                     <label class="form-label fw-bold">Tu Código de Usuario:</label>
                     <input type="text" id="passModalCodigo" class="form-control" placeholder="Ej: EST-001" required>
@@ -409,15 +411,17 @@
     <!-- Bootstrap JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        const URL_API = "https://script.google.com/macros/s/AKfycbzH0VuVH9PGXpDCY27QAHW0X6YorxjERCWZXVIry8lls2JmFAv82gLVL_JIusOMy7e-/exec"; // Reemplaza con tu enlace de implementación web
+        // REEMPLAZA ESTA URL CON LA DE TU IMPLEMENTACIÓN EN GOOGLE APPS SCRIPT
+        const URL_API = "https://script.google.com/macros/s/AKfycbyNEEzjQf-IwzA-XADu-C0-dmL4FVLlskcdtKPotkZv2aLNuGZu2iIAAhzD6wktHz1p/exec"; 
 
+        // 1. LOGIN DOCENTE
         async function verificarDocente() {
             let usuario = document.getElementById("inputUsuarioDocente").value.trim();
             let pass = document.getElementById("inputPassDocente").value.trim();
             if(!usuario || !pass) { alert("Complete usuario y contraseña"); return; }
 
             try {
-                let res = await fetch(`${URL_API}?accion=login&tipo=Docentes&codigo=${usuario}&pass=${pass}`);
+                let res = await fetch(`${URL_API}?accion=login&tipo=Docentes&codigo=${encodeURIComponent(usuario)}&pass=${encodeURIComponent(pass)}`);
                 let data = await res.json();
                 if(data.success) {
                     document.getElementById("loginDocenteBox").style.display = "none";
@@ -429,10 +433,12 @@
             } catch(e) { alert("Error al conectar con el servidor."); }
         }
 
+        // 2. LOGIN ADMIN
         async function verificarAdmin() {
             let clave = document.getElementById("inputClaveAdmin").value.trim();
+            if(!clave) { alert("Ingrese la clave"); return; }
             try {
-                let res = await fetch(`${URL_API}?accion=loginAdmin&clave=${clave}`);
+                let res = await fetch(`${URL_API}?accion=loginAdmin&clave=${encodeURIComponent(clave)}`);
                 let data = await res.json();
                 if(data.success) {
                     document.getElementById("loginAdminBox").style.display = "none";
@@ -444,6 +450,7 @@
             } catch(e) { alert("Error de conexión."); }
         }
 
+        // 3. CREAR USUARIO (ADMIN)
         async function adminCrearUsuario() {
             let tipo = document.getElementById("adminTipoNuevo").value;
             let nombre = document.getElementById("adminNombreNuevo").value.trim();
@@ -453,21 +460,23 @@
                 let res = await fetch(`${URL_API}?accion=crearUsuario&tipo=${tipo}&nombre=${encodeURIComponent(nombre)}`);
                 let data = await res.json();
                 if(data.success) {
-                    document.getElementById("adminResuladoAdmin") || (document.getElementById("areaResultadosAdmin").innerHTML = 
-                        `Usuario creado con éxito. Código asignado: <b class="text-success">${data.codigo}</b> | Contraseña Temporal: <b class="text-danger">${data.tempPass}</b>`);
+                    document.getElementById("areaResultadosAdmin").innerHTML = 
+                        `Usuario creado con éxito. Código asignado: <b class="text-success">${data.codigo}</b> | Contraseña Temporal: <b class="text-danger">${data.tempPass}</b>`;
+                    document.getElementById("adminNombreNuevo").value = "";
                 } else {
                     alert("Error al registrar el usuario.");
                 }
             } catch(e) { alert("Error de red."); }
         }
 
+        // 4. RESETEAR PASS (ADMIN)
         async function adminResetPass() {
             let codigo = document.getElementById("adminCodigoObjetivo").value.trim();
             if(!codigo) { alert("Ingrese el código del usuario"); return; }
             let tipo = codigo.toUpperCase().startsWith("DOC") ? "Docentes" : "Estudiantes";
 
             try {
-                let res = await fetch(`${URL_API}?accion=resetPass&tipo=${tipo}&codigo=${codigo}`);
+                let res = await fetch(`${URL_API}?accion=resetPass&tipo=${tipo}&codigo=${encodeURIComponent(codigo)}`);
                 let data = await res.json();
                 if(data.success) {
                     document.getElementById("areaResultadosAdmin").innerHTML = `Contraseña restablecida para ${codigo}. Temporal: <b class="text-danger">${data.tempPass}</b>`;
@@ -475,21 +484,24 @@
             } catch(e) { alert("Error de conexión."); }
         }
 
+        // 5. ELIMINAR USUARIO (ADMIN)
         async function adminEliminarUsuario() {
             let codigo = document.getElementById("adminCodigoObjetivo").value.trim();
             if(!codigo || !confirm(`¿Seguro que desea eliminar al usuario con código ${codigo}?`)) return;
             let tipo = codigo.toUpperCase().startsWith("DOC") ? "Docentes" : "Estudiantes";
 
             try {
-                let res = await fetch(`${URL_API}?accion=eliminarUsuario&tipo=${tipo}&codigo=${codigo}`);
+                let res = await fetch(`${URL_API}?accion=eliminarUsuario&tipo=${tipo}&codigo=${encodeURIComponent(codigo)}`);
                 let data = await res.json();
                 if(data.success) {
                     alert("Usuario eliminado correctamente.");
                     document.getElementById("adminCodigoObjetivo").value = "";
+                    document.getElementById("areaResultadosAdmin").innerHTML = "";
                 } else { alert("No se pudo eliminar."); }
             } catch(e) { alert("Error de conexión."); }
         }
 
+        // 6. CONSULTA SEGURA DE ESTUDIANTE
         async function consultarEstudiantePorCodigo() {
             let codigo = document.getElementById("inputCodigoEstudiante").value.trim();
             let pass = document.getElementById("inputPassEstudiante").value.trim();
@@ -504,7 +516,7 @@
             tablaBody.innerHTML = `<tr><td colspan="5"><div class="spinner-border text-primary" role="status"></div> Verificando...</td></tr>`;
 
             try {
-                let res = await fetch(`${URL_API}?accion=consultarEstudiante&codigo=${codigo}&pass=${pass}&pestana=${pestana}`);
+                let res = await fetch(`${URL_API}?accion=consultarEstudiante&codigo=${encodeURIComponent(codigo)}&pass=${encodeURIComponent(pass)}&pestana=${encodeURIComponent(pestana)}`);
                 let data = await res.json();
 
                 if(!data.success) {
@@ -528,6 +540,7 @@
             }
         }
 
+        // 7. LECTURA GENERAL (DOCENTES Y ADMIN)
         async function cargarDatosGenerales(rol) {
             let pestana = (rol === 'Docente') ? document.getElementById("selectPestanaDocente").value : document.getElementById("selectPestanaAdmin").value;
             let titulo = document.getElementById("tituloTabla");
@@ -538,7 +551,7 @@
             tablaBody.innerHTML = `<tr><td colspan="5"><div class="spinner-border text-dark" role="status"></div> Cargando...</td></tr>`;
 
             try {
-                let res = await fetch(`${URL_API}?pestana=${pestana}`);
+                let res = await fetch(`${URL_API}?pestana=${encodeURIComponent(pestana)}`);
                 let datos = await res.json();
 
                 if(datos.length === 0) {
@@ -552,16 +565,14 @@
                 tablaBody.innerHTML = datos.map(row => `<tr>${llaves.map(k => `<td>${row[k] !== undefined ? row[k] : ''}</td>`).join('')}</tr>`).join('');
 
             } catch(e) {
-                tablaBody.innerHTML = "<tr><td colspan='5' class='text-danger py-3'>No se pudo obtener la información.</td></tr>";
+                tablaBody.innerHTML = "<tr><td colspan='5' class='text-danger py-3'>Error al cargar registros generales.</td></tr>";
             }
         }
 
+        // 8. FUNCIONES MODAL DE ESCRITURA (DOCENTES/ADMIN)
         function abrirModalModificacion() {
-            new bootstrap.Modal(document.getElementById('modalModificacion')).show();
-        }
-
-        function mostrarModalCambioPass(tipo) {
-            new bootstrap.Modal(document.getElementById('modalCambioPass')).show();
+            var modal = new bootstrap.Modal(document.getElementById('modalModificacion'));
+            modal.show();
         }
 
         async function enviarDatosModificacion(event) {
@@ -569,51 +580,66 @@
             let pestana = document.getElementById("modPestana").value;
             let accion = document.getElementById("modAccion").value;
             let codigo = document.getElementById("modCodigo").value.trim();
-            let valoresRaw = document.getElementById("modValores").value.trim();
+            let valores = document.getElementById("modValores").value.trim();
 
-            let payload = { pestana, accion, codigo, valores: valoresRaw };
+            let payload = { pestana, accion, codigo, valores };
 
             try {
                 let res = await fetch(URL_API, {
                     method: "POST",
+                    headers: { "Content-Type": "text/plain;charset=utf-8" },
                     body: JSON.stringify(payload)
                 });
                 let data = await res.json();
                 if(data.success) {
-                    alert("¡Registro guardado y actualizado con éxito en Google Sheets!");
+                    alert("¡Registro guardado correctamente!");
                     bootstrap.Modal.getInstance(document.getElementById('modalModificacion')).hide();
+                    document.getElementById("formModificacionDatos").reset();
                 } else {
-                    alert("Error: " + data.message);
+                    alert(data.message || "Error al actualizar registro.");
                 }
-            } catch(e) { alert("Error al enviar los datos."); }
+            } catch(e) {
+                alert("Error de conexión al enviar cambios.");
+            }
+        }
+
+        // 9. FUNCIONES MODAL CAMBIO CONTRASEÑA
+        function mostrarModalCambioPass(tipo) {
+            document.getElementById("passModalTipo").value = tipo;
+            var modal = new bootstrap.Modal(document.getElementById('modalCambioPass'));
+            modal.show();
         }
 
         async function ejecutarCambioPass(event) {
             event.preventDefault();
+            let tipo = document.getElementById("passModalTipo").value;
             let codigo = document.getElementById("passModalCodigo").value.trim();
             let actual = document.getElementById("passModalActual").value.trim();
             let nueva = document.getElementById("passModalNueva").value.trim();
-            let tipo = codigo.toUpperCase().startsWith("DOC") ? "Docentes" : "Estudiantes";
 
             try {
-                let res = await fetch(`${URL_API}?accion=cambiarPassPropia&tipo=${tipo}&codigo=${codigo}&actual=${actual}&nueva=${nueva}`);
+                let res = await fetch(`${URL_API}?accion=cambiarPassPropia&tipo=${tipo}&codigo=${encodeURIComponent(codigo)}&actual=${encodeURIComponent(actual)}&nueva=${encodeURIComponent(nueva)}`);
                 let data = await res.json();
                 if(data.success) {
-                    alert("¡Contraseña actualizada correctamente! Ya puedes iniciar sesión con tu nueva clave.");
+                    alert("¡Contraseña actualizada con éxito!");
                     bootstrap.Modal.getInstance(document.getElementById('modalCambioPass')).hide();
                 } else {
-                    alert(data.message || "No se pudo actualizar la contraseña.");
+                    alert(data.message || "No se pudo cambiar la contraseña.");
                 }
-            } catch(e) { alert("Error de red."); }
+            } catch(e) { alert("Error al procesar la solicitud."); }
         }
 
+        // 10. ENVÍO A WHATSAPP DIRECTO
         function enviarWhatsAppDirecto(event) {
             event.preventDefault();
-            let nombre = document.getElementById('wsNombre').value;
-            let grado = document.getElementById('wsGrado').value;
-            let mensaje = document.getElementById('wsMensaje').value;
-            let telefonoColegio = "50375982371"; 
-            window.open(`https://wa.me/${telefonoColegio}?text=${encodeURIComponent(`Hola, soy ${nombre} de ${grado}. ${mensaje}`)}`, '_blank');
+            let telefono = "50375982371";
+            let nombre = document.getElementById("wsNombre").value.trim();
+            let grado = document.getElementById("wsGrado").value.trim();
+            let mensaje = document.getElementById("wsMensaje").value.trim();
+
+            let texto = `Hola, mi nombre es ${nombre}, del grado/sección ${grado}. Consulta: ${mensaje}`;
+            let url = `https://wa.me/${telefono}?text=${encodeURIComponent(texto)}`;
+            window.open(url, "_blank");
         }
     </script>
 </body>
