@@ -6,10 +6,23 @@
     <title>Portal Académico - Colegio Evangélico El Edén</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body { background-color: #f4f6f9; }
-        .navbar-brand { font-weight: bold; }
-        .card { border: none; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.08); }
-        .table-responsive { background: #ffffff; border-radius: 8px; padding: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        body {
+            background-color: #f4f6f9;
+        }
+        .navbar-brand {
+            font-weight: bold;
+        }
+        .card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.08);
+        }
+        .table-responsive {
+            background: #ffffff;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
     </style>
 </head>
 <body>
@@ -54,9 +67,9 @@
                             <option value="conducta">Conducta</option>
                         </select>
                     </div>
-                    <button id="btnModificarDatos" class="btn btn-success me-2" style="display:none;" onclick="abrirModalModificacion()">+ Gestión de Datos</button>
-                    <button class="btn btn-outline-secondary me-2" onclick="abrirModalCambioPass()">Cambiar Contraseña</button>
-                    <button class="btn btn-danger" onclick="cerrarSesion()">Cerrar Sesión</button>
+                    <button id="btnModificarDatos" class="btn btn-success me-2 mb-1 mb-md-0" style="display:none;" onclick="abrirModalModificacion()">+ Gestión de Registros</button>
+                    <button class="btn btn-outline-secondary me-2 mb-1 mb-md-0" onclick="abrirModalCambioPass()">Cambiar Contraseña</button>
+                    <button class="btn btn-danger mb-1 mb-md-0" onclick="cerrarSesion()">Cerrar Sesión</button>
                 </div>
             </div>
         </div>
@@ -82,12 +95,12 @@
         <div class="card p-4 mb-5">
             <h5 class="card-title mb-3">¿Tienes dudas o problemas de acceso? Contáctanos</h5>
             <form onsubmit="enviarWhatsAppDirecto(event)" class="row g-3">
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <input type="text" id="wsNombre" class="form-control" placeholder="Tu Nombre Completo" required>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <select id="wsGrado" class="form-select" required>
-                        <option value="" disabled selected>Selecciona tu Grado (1° a 9°)</option>
+                        <option value="" disabled selected>Selecciona Grado</option>
                         <option value="1° Grado">1° Grado</option>
                         <option value="2° Grado">2° Grado</option>
                         <option value="3° Grado">3° Grado</option>
@@ -99,7 +112,10 @@
                         <option value="9° Grado">9° Grado</option>
                     </select>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
+                    <input type="email" id="wsEmail" class="form-control" placeholder="Tu Correo Electrónico" required>
+                </div>
+                <div class="col-md-3">
                     <input type="text" id="wsMensaje" class="form-control" placeholder="Mensaje / Consulta" required>
                 </div>
                 <div class="col-12 text-end">
@@ -120,14 +136,17 @@
                 <form onsubmit="ejecutarLogin(event)">
                     <div class="modal-body">
                         <input type="hidden" id="loginTipo">
+                        
                         <div id="grupoCodigo" class="mb-3">
                             <label class="form-label">Código de Usuario</label>
                             <input type="text" id="loginCodigo" class="form-control" placeholder="Ej: EST-123 o DOC-456">
                         </div>
+                        
                         <div class="mb-3">
                             <label class="form-label">Contraseña / Clave</label>
                             <input type="password" id="loginPass" class="form-control" required>
                         </div>
+
                         <div id="grupoPestanaEstudiante" class="mb-3" style="display: none;">
                             <label class="form-label">Consulta deseada:</label>
                             <select id="loginPestanaEstudiante" class="form-select">
@@ -177,13 +196,13 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Administrar Registros</h5>
+                    <h5 class="modal-title">Gestión de Registros</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <form id="formModificacionDatos" onsubmit="enviarDatosModificacion(event)">
                     <div class="modal-body">
                         <div class="mb-3">
-                            <label class="form-label">Pestaña destino</label>
+                            <label class="form-label">Pestaña a modificar</label>
                             <select id="modPestana" class="form-select">
                                 <option value="estudiantes">Estudiantes</option>
                                 <option value="docentes">Docentes</option>
@@ -193,40 +212,21 @@
                             </select>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Acción</label>
-                            <select id="modAccion" class="form-select" onchange="alternarCamposValores()">
-                                <option value="agregar">Agregar Registro Nuevo</option>
-                                <option value="actualizar">Actualizar Registro Existente</option>
-                                <option value="eliminar">Eliminar Registro por Código</option>
+                            <label class="form-label">Acción a realizar</label>
+                            <select id="modAccion" class="form-select" onchange="cambiarVistaAccion(this.value)">
+                                <option value="agregar">Agregar Fila Nueva</option>
+                                <option value="actualizar">Actualizar Fila Existente</option>
+                                <option value="eliminar">Eliminar Fila</option>
                             </select>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Código (Estudiante/Docente)</label>
+                            <label class="form-label">Código del Estudiante / Docente</label>
                             <input type="text" id="modCodigo" class="form-control" placeholder="Ej: EST-101" required>
                         </div>
-                        <div class="mb-3" id="grupoGradoSelect">
-                            <label class="form-label">Grado (Oferta Académica: 1° a 9°)</label>
-                            <select id="modGrado" class="form-select">
-                                <option value="">No aplica / Ninguno</option>
-                                <option value="1° Grado">1° Grado</option>
-                                <option value="2° Grado">2° Grado</option>
-                                <option value="3° Grado">3° Grado</option>
-                                <option value="4° Grado">4° Grado</option>
-                                <option value="5° Grado">5° Grado</option>
-                                <option value="6° Grado">6° Grado</option>
-                                <option value="7° Grado">7° Grado</option>
-                                <option value="8° Grado">8° Grado</option>
-                                <option value="9° Grado">9° Grado</option>
-                            </select>
-                        </div>
-                        <div class="mb-3" id="grupoEmail">
-                            <label class="form-label">Correo Electrónico (E-mail)</label>
-                            <input type="email" id="modEmail" class="form-control" placeholder="ejemplo@eleden.edu.sv">
-                        </div>
-                        <div class="mb-3" id="grupoValoresText">
-                            <label class="form-label">Campos adicionales (Formato: columna:valor)</label>
-                            <textarea id="modValores" class="form-control" rows="3" placeholder="Ej: nombre:Juan Pérez, nota:9.5, pass:1234"></textarea>
-                            <small class="text-muted">Escribe los pares nombre_columna:valor separados por comas.</small>
+                        <div class="mb-3" id="grupoValoresMod">
+                            <label class="form-label">Valores (Campos disponibles: grado, email, nombre, etc.)</label>
+                            <textarea id="modValores" class="form-control" rows="4" placeholder="Ej: grado:5° Grado, email:ejemplo@correo.com, nota:9.5"></textarea>
+                            <small class="text-muted">Formato: <code>columna:valor, columna2:valor2</code>. Oferta académica permitida: 1° Grado a 9° Grado.</small>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -241,18 +241,21 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        const URL_API = "https://script.google.com/macros/s/AKfycbxYAobauXcvMBqTci8Uxa7cl3HySMn_JPLPYJUCszx3OJeTPWEr0gjg_o27XdCsBEbQ/exec"; 
+        // REEMPLAZAR POR LA URL DE TU WEB APP DE APPS SCRIPT
+        const URL_API = "https://script.google.com/macros/s/AKfycbyahe7aGLIlf9aXCsD-3jqj77AYCox0BhRi2t8ylfOB8K6N8wv1GeqiXZOtl8ZUxKjy/exec"; 
 
         let usuarioActual = {
             logueado: false,
-            tipo: '',
+            tipo: '', // 'estudiantes', 'docentes', 'admin'
             codigo: '',
             pass: ''
         };
 
+        // MOSTRAR MODAL DE LOGIN SEGÚN ROL
         function mostrarModalLogin(tipo) {
             usuarioActual.tipo = tipo;
             document.getElementById("loginTipo").value = tipo;
+            
             let titulo = document.getElementById("loginModalTitulo");
             let grupoCodigo = document.getElementById("grupoCodigo");
             let grupoPestanaEstudiante = document.getElementById("grupoPestanaEstudiante");
@@ -275,15 +278,19 @@
             modal.show();
         }
 
+        // EJECUTAR LOGIN
         async function ejecutarLogin(e) {
             e.preventDefault();
             let tipo = usuarioActual.tipo;
             let codigo = document.getElementById("loginCodigo").value.trim();
             let pass = document.getElementById("loginPass").value.trim();
 
-            let url = (tipo === 'admin') 
-                ? `${URL_API}?accion=loginAdmin&clave=${encodeURIComponent(pass)}`
-                : `${URL_API}?accion=login&tipo=${encodeURIComponent(tipo)}&codigo=${encodeURIComponent(codigo)}&pass=${encodeURIComponent(pass)}`;
+            let url = '';
+            if (tipo === 'admin') {
+                url = `${URL_API}?accion=loginAdmin&clave=${encodeURIComponent(pass)}`;
+            } else {
+                url = `${URL_API}?accion=login&tipo=${encodeURIComponent(tipo)}&codigo=${encodeURIComponent(codigo)}&pass=${encodeURIComponent(pass)}`;
+            }
 
             try {
                 let res = await fetch(url);
@@ -311,6 +318,7 @@
             }
         }
 
+        // CONFIGURAR INTERFAZ TRAS LOGIN EXITOSO
         function configurarInterfaz() {
             document.getElementById("panelNavegacion").style.display = "block";
             document.getElementById("saludoUsuario").innerText = `Usuario: ${usuarioActual.codigo || 'Administrador'}`;
@@ -328,6 +336,7 @@
             }
         }
 
+        // CONSULTA INDIVIDUAL (ESTUDIANTES)
         async function consultarDatosEstudiante(pestana) {
             let titulo = document.getElementById("tituloTabla");
             let tablaHead = document.getElementById("tablaHead");
@@ -350,10 +359,11 @@
                     tablaBody.innerHTML = `<tr><td class="text-warning">No se encontraron registros en ${pestana}.</td></tr>`;
                 }
             } catch (e) {
-                tablaBody.innerHTML = `<tr><td class="text-danger">Error de carga.</td></tr>`;
+                tablaBody.innerHTML = `<tr><td class="text-danger">Error al cargar información.</td></tr>`;
             }
         }
 
+        // CONSULTA GENERAL (DOCENTES / ADMIN)
         async function cargarDatosGenerales() {
             let pestana = document.getElementById("selectPestanaGeneral").value;
             let titulo = document.getElementById("tituloTabla");
@@ -371,8 +381,26 @@
                 if (data.success && data.filas.length > 0) {
                     let llaves = Object.keys(data.filas[0]);
                     titulo.innerText = `Registros Almacenados: ${pestana.toUpperCase()}`;
-                    tablaHead.innerHTML = `<tr>${llaves.map(k => `<th class="text-uppercase">${k}</th>`).join('')}</tr>`;
-                    tablaBody.innerHTML = data.filas.map(row => `<tr>${llaves.map(k => `<td>${row[k] !== undefined ? row[k] : ''}</td>`).join('')}</tr>`).join('');
+                    
+                    let cabecera = `<tr>${llaves.map(k => `<th class="text-uppercase">${k}</th>`).join('')}`;
+                    if (usuarioActual.tipo === 'admin') {
+                        cabecera += `<th>ACCIONES</th>`;
+                    }
+                    cabecera += `</tr>`;
+                    tablaHead.innerHTML = cabecera;
+
+                    tablaBody.innerHTML = data.filas.map(row => {
+                        let celdaFila = `<tr>${llaves.map(k => `<td>${row[k] !== undefined ? row[k] : ''}</td>`).join('')}`;
+                        if (usuarioActual.tipo === 'admin') {
+                            let codigoFila = row.codigo || row.codigo_estudiante || row.codigo_docente || '';
+                            celdaFila += `<td>
+                                <button class="btn btn-sm btn-danger" onclick="eliminarRegistroDirecto('${pestana}', '${codigoFila}')">Eliminar</button>
+                            </td>`;
+                        }
+                        celdaFila += `</tr>`;
+                        return celdaFila;
+                    }).join('');
+
                 } else {
                     tablaBody.innerHTML = `<tr><td class="text-warning">No hay datos registrados en ${pestana}.</td></tr>`;
                 }
@@ -381,6 +409,40 @@
             }
         }
 
+        // ELIMINAR DIRECTAMENTE DESDE LA TABLA (SOLO ADMIN)
+        async function eliminarRegistroDirecto(pestana, codigo) {
+            if (!codigo) {
+                alert("No se identificó el código del registro para eliminar.");
+                return;
+            }
+
+            if (!confirm(`¿Estás seguro de que deseas eliminar el registro con código ${codigo} en la pestaña ${pestana}?`)) {
+                return;
+            }
+
+            let payload = {
+                pestana: pestana,
+                accion: "eliminar",
+                codigo: codigo,
+                valores: ""
+            };
+
+            try {
+                await fetch(URL_API, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                alert("Solicitud de eliminación enviada. Actualizando datos...");
+                cargarDatosGenerales();
+            } catch (e) {
+                alert("Error al intentar eliminar el registro.");
+            }
+        }
+
+        // CAMBIO DE CONTRASEÑA
         function abrirModalCambioPass() {
             let modal = new bootstrap.Modal(document.getElementById('modalCambioPass'));
             modal.show();
@@ -408,30 +470,24 @@
             }
         }
 
+        // GESTIÓN Y MODIFICACIÓN DE DATOS (ADMIN Y DOCENTES)
         function abrirModalModificacion() {
             let modal = new bootstrap.Modal(document.getElementById('modalModificacion'));
             modal.show();
         }
 
-        function alternarCamposValores() {
-            let accion = document.getElementById("modAccion").value;
-            let grupoGrado = document.getElementById("grupoGradoSelect");
-            let grupoEmail = document.getElementById("grupoEmail");
-            let grupoValores = document.getElementById("grupoValoresText");
+        function cambiarVistaAccion(accion) {
+            let grupoValores = document.getElementById("grupoValoresMod");
             let btn = document.getElementById("btnEjecutarAccion");
-
-            if (accion === "eliminar") {
-                grupoGrado.style.display = "none";
-                grupoEmail.style.display = "none";
-                grupoValores.style.display = "none";
-                btn.className = "btn btn-danger";
-                btn.innerText = "Eliminar Registro";
+            
+            if (accion === 'eliminar') {
+                grupoValores.style.display = 'none';
+                btn.className = 'btn btn-danger';
+                btn.innerText = 'Eliminar Registro';
             } else {
-                grupoGrado.style.display = "block";
-                grupoEmail.style.display = "block";
-                grupoValores.style.display = "block";
-                btn.className = "btn btn-success";
-                btn.innerText = "Guardar Cambios";
+                grupoValores.style.display = 'block';
+                btn.className = 'btn btn-success';
+                btn.innerText = 'Guardar Cambios';
             }
         }
 
@@ -440,24 +496,13 @@
             let pestana = document.getElementById("modPestana").value;
             let accion = document.getElementById("modAccion").value;
             let codigo = document.getElementById("modCodigo").value.trim();
-            let grado = document.getElementById("modGrado").value;
-            let email = document.getElementById("modEmail").value.trim();
-            let valoresTexto = document.getElementById("modValores").value.trim();
-
-            if (accion === "eliminar" && !confirm(`¿Estás seguro de que deseas ELIMINAR el registro con código ${codigo} de la pestaña ${pestana}?`)) {
-                return;
-            }
-
-            let valoresCombinados = [];
-            if (grado) valoresCombinados.push(`grado:${grado}`);
-            if (email) valoresCombinados.push(`email:${email}`);
-            if (valoresTexto) valoresCombinados.push(valoresTexto);
+            let valores = document.getElementById("modValores").value.trim();
 
             let payload = {
                 pestana: pestana,
                 accion: accion,
                 codigo: codigo,
-                valores: valoresCombinados.join(",")
+                valores: valores
             };
 
             try {
@@ -468,28 +513,31 @@
                     body: JSON.stringify(payload)
                 });
 
-                alert("Operación completada. Actualiza la tabla para visualizar los cambios.");
+                alert("Operación completada. Se actualizarán los datos de la vista.");
                 bootstrap.Modal.getInstance(document.getElementById('modalModificacion')).hide();
                 document.getElementById("formModificacionDatos").reset();
-                alternarCamposValores();
+                cambiarVistaAccion('agregar');
                 cargarDatosGenerales();
 
             } catch (e) {
-                alert("Error al enviar la solicitud.");
+                alert("Error al procesar la solicitud.");
             }
         }
 
+        // ENVÍO DE FORMULARIO DE CONTACTO VÍA WHATSAPP
         function enviarWhatsAppDirecto(e) {
             e.preventDefault();
             let nombre = document.getElementById("wsNombre").value.trim();
             let grado = document.getElementById("wsGrado").value;
+            let email = document.getElementById("wsEmail").value.trim();
             let mensaje = document.getElementById("wsMensaje").value.trim();
             let telefono = "50375982371";
 
-            let texto = `Hola, mi nombre es ${nombre}, del grado ${grado}. ${mensaje}`;
+            let texto = `Hola, mi nombre es ${nombre}, de ${grado}. Mi correo es ${email}. Consulta: ${mensaje}`;
             window.open(`https://api.whatsapp.com/send?phone=${telefono}&text=${encodeURIComponent(texto)}`, '_blank');
         }
 
+        // CERRAR SESIÓN
         function cerrarSesion() {
             usuarioActual = { logueado: false, tipo: '', codigo: '', pass: '' };
             document.getElementById("panelNavegacion").style.display = "none";
