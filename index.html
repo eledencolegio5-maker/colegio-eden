@@ -414,7 +414,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        const URL_API = "https://script.google.com/macros/s/AKfycbxPo5n8K0epizaVG-iZWBdz2fd_cxj7vbN0zgTuijC6AHqAQXagnOzmtEz3qr7Rofuo/exec"; 
+        const URL_API = "https://script.google.com/macros/s/AKfycbyf-Jm9g2_NDeYFH6-F_A4s-1Zrkj72_R8ULjSlxhebR7fMcxucSVfrSwcL-aMv4A/exec"; 
 
         let tokens = {
             docente: "",
@@ -425,6 +425,8 @@
             codigo: "",
             pass: ""
         };
+
+        let rolActivoModal = "";
 
         function escapeHTML(str) {
             if (typeof str !== 'string') return str;
@@ -447,7 +449,6 @@
             }
         }
 
-        // FUNCIÓN CERRAR SESIÓN PARA LOS TRES USUARIOS
         function cerrarSesion(rol) {
             if (rol === 'Estudiante') {
                 sesionEstudiante = { codigo: "", pass: "" };
@@ -561,100 +562,124 @@
                 document.getElementById("loginAdminBox").style.display = "none";
                 document.getElementById("panelAdminAutorizado").style.display = "block";
             } else {
-                alert(data.message || "Clave incorrecta.");
+                alert(data.message || "Clave administrativa incorrecta.");
             }
         }
 
         async function cargarDatosGenerales(rol) {
+            let selectId = rol === 'Docente' ? "selectPestanaDocente" : "selectPestanaAdmin";
+            let pestana = document.getElementById(selectId).value;
             let token = rol === 'Docente' ? tokens.docente : tokens.admin;
-            if(!token) { alert("Sesión no válida o expirada."); return; }
 
-            let pestana = rol === 'Docente' ? document.getElementById("selectPestanaDocente").value : document.getElementById("selectPestanaAdmin").value;
+            let titulo = document.getElementById("tituloTabla");
             let tablaHead = document.getElementById("tablaHead");
             let tablaBody = document.getElementById("tablaBody");
 
-            tablaBody.innerHTML = `<tr><td colspan="8"><div class="spinner-border text-primary"></div> Cargando datos...</td></tr>`;
+            titulo.innerText = `Cargando tabla: ${pestana.toUpperCase()}...`;
+            tablaBody.innerHTML = `<tr><td colspan="8"><div class="spinner-border text-primary" role="status"></div> Cargando datos...</td></tr>`;
 
-            let data = await solicitarAPI({ accion: "cargarDatosGenerales", pestana: pestana, token: token });
+            let data = await solicitarAPI({
+                accion: "obtenerDatosGeneral",
+                token: token,
+                pestana: pestana
+            });
 
-            if(data.success && data.filas && data.filas.length > 0) {
-                let llaves = Object.keys(data.filas[0]);
-                document.getElementById("tituloTabla").innerText = `Tabla: ${pestana.toUpperCase()}`;
-                
-                tablaHead.innerHTML = `<tr>${llaves.map(k => `<th>${escapeHTML(k.toUpperCase())}</th>`).join('')}<th>ACCIONES</th></tr>`;
+            if(!data.success) {
+                tablaBody.innerHTML = `<tr><td colspan='8' class='text-danger py-3'>${escapeHTML(data.message || 'Error al obtener datos.')}</td></tr>`;
+                return;
+            }
 
-                tablaBody.innerHTML = data.filas.map(row => {
-                    let codigoReg = row.codigo || row.CODIGO || row.ID || "";
-                    let asigReg = row.asignatura || row.ASIGNATURA || "";
-                    return `<tr>
-                        ${llaves.map(k => `<td>${escapeHTML(row[k] !== undefined ? String(row[k]) : '')}</td>`).join('')}
-                        <td>
-                            <button class="btn btn-sm btn-danger" onclick="eliminarFilaDirecta('${escapeHTML(pestana)}', '${escapeHTML(codigoReg)}', '${escapeHTML(asigReg)}', '${rol}')">
-                                <i class="bi bi-trash-fill"></i> Eliminar
-                            </button>
-                        </td>
-                    </tr>`;
-                }).join('');
+            if(!data.filas || data.filas.length === 0) {
+                tablaBody.innerHTML = "<tr><td colspan='8' class='text-warning py-3'>No hay registros guardados en esta tabla.</td></tr>";
             } else {
-                tablaBody.innerHTML = `<tr><td colspan='8' class='text-warning py-3'>${escapeHTML(data.message || 'Sin registros.')}</td></tr>`;
+                let llaves = Object.keys(data.filas[0]);
+                titulo.innerText = `Tabla de Datos: ${pestana.toUpperCase()}`;
+                tablaHead.innerHTML = `<tr>${llaves.map(k => `<th>${escapeHTML(k.toUpperCase())}</th>`).join('')}</tr>`;
+                tablaBody.innerHTML = data.filas.map(row => `<tr>${llaves.map(k => `<td>${escapeHTML(row[k] !== undefined ? String(row[k]) : '')}</td>`).join('')}</tr>`).join('');
             }
         }
 
-        async function eliminarFilaDirecta(pestana, codigo, asignatura, rol) {
-            let token = rol === 'Docente' ? tokens.docente : tokens.admin;
-            if(!token) { alert("Sesión no válida."); return; }
-            if(!codigo) { alert("Código no válido."); return; }
-
-            if(!confirm(`¿Desea eliminar el registro ${codigo}?`)) return;
-
-            let data = await solicitarAPI({
-                accion: "modificarDatos",
-                modPestana: pestana,
-                modAccion: "eliminar",
-                modCodigo: codigo,
-                asignatura: asignatura,
-                token: token
-            });
-
-            alert(data.message);
-            if(data.success) cargarDatosGenerales(rol);
-        }
-
         async function adminCrearUsuario() {
-            if(!tokens.admin) return;
             let tipo = document.getElementById("adminTipoNuevo").value;
             let nombre = document.getElementById("adminNombreNuevo").value.trim();
-            if(!nombre) { alert("Ingrese el nombre"); return; }
+            if(!nombre) { alert("Ingrese un nombre completo."); return; }
 
-            let data = await solicitarAPI({ accion: "adminCrearUsuario", tipo: tipo, nombre: nombre, token: tokens.admin });
-            document.getElementById("areaResultadosAdmin").innerText = data.message;
+            let area = document.getElementById("areaResultadosAdmin");
+            area.innerText = "Creando usuario...";
+
+            let data = await solicitarAPI({
+                accion: "adminCrearUsuario",
+                token: tokens.admin,
+                tipo: tipo,
+                nombre: nombre
+            });
+
+            if(data.success) {
+                area.innerHTML = `<strong>¡Usuario Creado!</strong> Código: <span class="text-dark">${data.codigo}</span> | Clave: <span class="text-dark">${data.pass}</span>`;
+                document.getElementById("adminNombreNuevo").value = "";
+            } else {
+                area.innerText = data.message || "Error al crear el usuario.";
+            }
         }
 
         async function adminResetPass() {
-            if(!tokens.admin) return;
             let codigo = document.getElementById("adminCodigoObjetivo").value.trim();
-            if(!codigo) { alert("Ingrese el código"); return; }
+            if(!codigo) { alert("Ingrese un código de usuario."); return; }
 
-            let data = await solicitarAPI({ accion: "adminResetPass", codigo: codigo, token: tokens.admin });
-            document.getElementById("areaResultadosAdmin").innerText = data.message;
+            let area = document.getElementById("areaResultadosAdmin");
+            area.innerText = "Restableciendo clave...";
+
+            let data = await solicitarAPI({
+                accion: "adminResetPass",
+                token: tokens.admin,
+                codigo: codigo
+            });
+
+            if(data.success) {
+                area.innerHTML = `<strong>¡Clave Restablecida!</strong> Usuario: <span class="text-dark">${codigo}</span> | Nueva Clave: <span class="text-dark">${data.nuevaPass}</span>`;
+            } else {
+                area.innerText = data.message || "Error al restablecer contraseña.";
+            }
         }
 
         async function adminEliminarUsuario() {
-            if(!tokens.admin) return;
             let codigo = document.getElementById("adminCodigoObjetivo").value.trim();
-            if(!codigo) { alert("Ingrese el código"); return; }
-            if(!confirm(`¿Confirma eliminar el usuario ${codigo}?`)) return;
+            if(!codigo) { alert("Ingrese un código de usuario."); return; }
 
-            let data = await solicitarAPI({ accion: "adminEliminarUsuario", codigo: codigo, token: tokens.admin });
-            document.getElementById("areaResultadosAdmin").innerText = data.message;
+            if(!confirm(`¿Está seguro de eliminar permanentemente al usuario ${codigo}?`)) return;
+
+            let area = document.getElementById("areaResultadosAdmin");
+            area.innerText = "Eliminando usuario...";
+
+            let data = await solicitarAPI({
+                accion: "adminEliminarUsuario",
+                token: tokens.admin,
+                codigo: codigo
+            });
+
+            if(data.success) {
+                area.innerHTML = `<span class="text-success">Usuario ${codigo} eliminado con éxito.</span>`;
+                document.getElementById("adminCodigoObjetivo").value = "";
+            } else {
+                area.innerText = data.message || "Error al eliminar usuario.";
+            }
         }
 
-        let rolModalActivo = "";
         function abrirModalModificacion(rol) {
-            rolModalActivo = rol;
-            let myModal = new bootstrap.Modal(document.getElementById('modalModificacion'));
+            rolActivoModal = rol;
+            let modalEl = new bootstrap.Modal(document.getElementById('modalModificacion'));
             cambiarCamposFormularioModal();
-            myModal.show();
+            modalEl.show();
+        }
+
+        function alternarVisibilidadCamposAccion() {
+            let accion = document.getElementById("modAccion").value;
+            let seccionDinamica = document.getElementById("seccionCamposDinamicos");
+            if (accion === "eliminar") {
+                seccionDinamica.style.display = "none";
+            } else {
+                seccionDinamica.style.display = "block";
+            }
         }
 
         function cambiarCamposFormularioModal() {
@@ -663,62 +688,100 @@
             contenedor.innerHTML = "";
 
             let campos = [];
-            if(pestana === "calificaciones") campos = ["Asignatura", "Nota_Periodo_1", "Nota_Periodo_2", "Nota_Periodo_3", "Nota_Final"];
-            else if(pestana === "asistencia") campos = ["Asignatura", "Fecha", "Estado"];
-            else if(pestana === "conducta") campos = ["Fecha", "Observacion", "Tipo"];
-            else if(pestana === "estudiantes") campos = ["Nombre", "Grado", "Seccion", "Encargado"];
-            else if(pestana === "asignaturas") campos = ["Nombre_Asignatura", "Docente_Asignado"];
+            if(pestana === "estudiantes") {
+                campos = [
+                    { id: "nombre", label: "Nombre Completo", type: "text" },
+                    { id: "grado", label: "Grado", type: "text" },
+                    { id: "seccion", label: "Sección", type: "text" },
+                    { id: "encargado", label: "Nombre del Encargado", type: "text" },
+                    { id: "telefono", label: "Teléfono de Contacto", type: "text" }
+                ];
+            } else if(pestana === "calificaciones") {
+                campos = [
+                    { id: "materia", label: "Asignatura", type: "text" },
+                    { id: "periodo", label: "Periodo / Trimestre", type: "text" },
+                    { id: "nota", label: "Calificación Final", type: "number" }
+                ];
+            } else if(pestana === "asistencia") {
+                campos = [
+                    { id: "fecha", label: "Fecha (DD/MM/AAAA)", type: "date" },
+                    { id: "estado", label: "Estado (Presente/Ausente/Jus)", type: "text" }
+                ];
+            } else if(pestana === "conducta") {
+                campos = [
+                    { id: "fecha", label: "Fecha", type: "date" },
+                    { id: "observacion", label: "Observación / Anotación", type: "text" },
+                    { id: "tipo", label: "Tipo (Positiva/Demérito)", type: "text" }
+                ];
+            } else if(pestana === "asignaturas") {
+                campos = [
+                    { id: "nombre", label: "Nombre de la Asignatura", type: "text" },
+                    { id: "docente", label: "Docente Encargado", type: "text" }
+                ];
+            }
 
-            campos.forEach(campo => {
+            campos.forEach(c => {
                 contenedor.innerHTML += `
                     <div class="col-md-6">
-                        <label class="form-label small fw-bold">${campo.replace(/_/g, ' ')}:</label>
-                        <input type="text" data-campo="${campo}" class="form-control form-control-sm campo-dinamico">
-                    </div>`;
+                        <label class="form-label small fw-bold">${c.label}:</label>
+                        <input type="${c.type}" id="mod_campo_${c.id}" class="form-control form-control-sm" step="any">
+                    </div>
+                `;
             });
-        }
 
-        function alternarVisibilidadCamposAccion() {
-            let accion = document.getElementById("modAccion").value;
-            document.getElementById("seccionCamposDinamicos").style.display = (accion === "eliminar") ? "none" : "block";
+            alternarVisibilidadCamposAccion();
         }
 
         async function enviarDatosModificacion(e) {
             e.preventDefault();
-            let token = rolModalActivo === 'Docente' ? tokens.docente : tokens.admin;
-            if(!token) { alert("Sesión inválida."); return; }
-
+            let token = rolActivoModal === 'Docente' ? tokens.docente : tokens.admin;
             let pestana = document.getElementById("modPestana").value;
             let accion = document.getElementById("modAccion").value;
             let codigo = document.getElementById("modCodigo").value.trim();
 
-            let payloadCampos = {};
-            document.querySelectorAll(".campo-dinamico").forEach(input => {
-                payloadCampos[input.getAttribute("data-campo")] = input.value.trim();
+            let payloadData = { codigo: codigo };
+
+            if(accion !== "eliminar") {
+                let contenedor = document.getElementById("contenedorCamposDinamicos");
+                let inputs = contenedor.querySelectorAll("input");
+                inputs.forEach(input => {
+                    let key = input.id.replace("mod_campo_", "");
+                    payloadData[key] = input.value.trim();
+                });
+            }
+
+            let btn = document.getElementById("btnGuardarModal");
+            btn.disabled = true;
+            btn.innerText = "Procesando...";
+
+            let response = await solicitarAPI({
+                accion: "gestionarDatosRegistros",
+                token: token,
+                pestana: pestana,
+                operacion: accion,
+                datos: payloadData
             });
 
-            let data = await solicitarAPI({
-                accion: "modificarDatos",
-                modPestana: pestana,
-                modAccion: accion,
-                modCodigo: codigo,
-                datos: payloadCampos,
-                token: token
-            });
+            btn.disabled = false;
+            btn.innerText = "Procesar";
 
-            alert(data.message);
-            if(data.success) {
-                bootstrap.Modal.getInstance(document.getElementById('modalModificacion')).hide();
-                cargarDatosGenerales(rolModalActivo);
+            if(response.success) {
+                alert("Operación completada exitosamente.");
+                let modalInst = bootstrap.Modal.getInstance(document.getElementById('modalModificacion'));
+                if(modalInst) modalInst.hide();
+                cargarDatosGenerales(rolActivoModal);
+            } else {
+                alert(response.message || "Ocurrió un error al procesar.");
             }
         }
 
-        function enviarWhatsAppDirecto(event) {
-            event.preventDefault();
+        function enviarWhatsAppDirecto(e) {
+            e.preventDefault();
             let nombre = document.getElementById("wsNombre").value.trim();
             let grado = document.getElementById("wsGrado").value.trim();
-            let texto = encodeURIComponent(`Hola, soy ${nombre}. Consulta: ${grado}`);
-            window.open(`https://wa.me/50375982371?text=${texto}`, '_blank');
+            let texto = `Hola, mi nombre es ${nombre}. Consulta: ${grado}`;
+            let url = `https://wa.me/50375982371?text=${encodeURIComponent(texto)}`;
+            window.open(url, '_blank');
         }
     </script>
 </body>
