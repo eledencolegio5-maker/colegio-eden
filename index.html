@@ -109,14 +109,17 @@
 
         <hr class="my-5">
 
+        <!-- PORTAL ESTUDIANTE -->
         <section id="portal-estudiante" class="mb-5 pt-3">
             <div class="card shadow-sm border-0 p-4 bg-white">
                 <div class="text-center mb-3">
-                    <span class="badge bg-primary fs-6 mb-1">Estudiantes</span>
+                    <span class="badge bg-primary fs-6 mb-1">Estudiantes y Padres</span>
                     <h3 class="fw-bold">Portal de Consulta</h3>
                     <p class="text-muted small">Ingrese con su código asignado y contraseña para consultar sus registros.</p>
                 </div>
-                <div class="row justify-content-center">
+
+                <!-- FORMULARIO DE INGRESO ESTUDIANTE -->
+                <div id="loginEstudianteBox" class="row justify-content-center">
                     <div class="col-md-5 mb-3">
                         <label class="form-label fw-bold">Código de Estudiante:</label>
                         <input type="text" id="inputCodigoEstudiante" class="form-control" placeholder="Ej: EST-001">
@@ -131,28 +134,55 @@
                             <option value="estudiantes">Mis Datos Generales</option>
                             <option value="calificaciones">Calificaciones</option>
                             <option value="asistencia">Asistencia</option>
-                            <option value="CONDUCTA">Conducta</option>
+                            <option value="conducta">Conducta</option>
                         </select>
                     </div>
+                    <div class="col-12 text-center">
+                        <button class="btn btn-primary fw-bold px-5" onclick="consultarEstudiantePorCodigo()">
+                            <i class="bi bi-search me-1"></i> Consultar Mis Datos
+                        </button>
+                    </div>
                 </div>
-                <div class="d-flex gap-2 justify-content-center">
-                    <button class="btn btn-primary fw-bold px-4" onclick="consultarEstudiantePorCodigo()">
-                        <i class="bi bi-search me-1"></i> Consultar Mis Datos
-                    </button>
+
+                <!-- PANEL SESIÓN ACTIVA ESTUDIANTE -->
+                <div id="panelEstudianteAutorizado" class="panel-oculto">
+                    <div class="alert alert-primary d-flex justify-content-between align-items-center fw-bold">
+                        <span><i class="bi bi-person-check-fill me-2"></i>Consulta de Estudiante Activa</span>
+                        <button class="btn btn-sm btn-outline-danger fw-bold" onclick="cerrarSesion('Estudiante')">
+                            <i class="bi bi-box-arrow-right me-1"></i> Cerrar Sesión
+                        </button>
+                    </div>
+                    <div class="row g-3 align-items-end mb-3">
+                        <div class="col-md-8">
+                            <label class="form-label fw-bold">Cambiar Sección a Consultar:</label>
+                            <select id="selectPestanaEstudianteActivo" class="form-select">
+                                <option value="estudiantes">Mis Datos Generales</option>
+                                <option value="calificaciones">Calificaciones</option>
+                                <option value="asistencia">Asistencia</option>
+                                <option value="conducta">Conducta</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <button class="btn btn-primary fw-bold w-100" onclick="consultarEstudianteActivo()">
+                                <i class="bi bi-arrow-clockwise me-1"></i> Actualizar Consulta
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
 
+        <!-- PORTAL DOCENTE -->
         <section id="portal-docente" class="mb-5 pt-3">
             <div class="card shadow-sm border-0 p-4 bg-white border-start border-4 border-success">
                 <div class="text-center mb-3">
                     <span class="badge bg-success fs-6 mb-1">Docentes</span>
                     <h3 class="fw-bold">Acceso para Docentes</h3>
-                    <p class="text-muted small">Ingrese con su Código Docente para gestionar registros en la base de datos.</p>
+                    <p class="text-muted small">Ingrese con su Código Docente para gestionar registros.</p>
                 </div>
                 <div id="loginDocenteBox" class="row justify-content-center">
                     <div class="col-md-5 mb-3">
-                        <input type="text" id="inputUsuarioDocente" class="form-control" placeholder="Código Único Docente (Ej: DOC-001)">
+                        <input type="text" id="inputUsuarioDocente" class="form-control" placeholder="Código Docente (Ej: DOC-001)">
                     </div>
                     <div class="col-md-5 mb-3">
                         <input type="password" id="inputPassDocente" class="form-control" placeholder="Contraseña">
@@ -163,17 +193,19 @@
                 </div>
                 <div id="panelDocenteAutorizado" class="panel-oculto">
                     <div class="alert alert-success d-flex justify-content-between align-items-center fw-bold">
-                        <span><i class="bi bi-person-check-fill me-2"></i>¡Acceso Concedido a Docente!</span>
-                        <button class="btn btn-sm btn-outline-danger fw-bold" onclick="cerrarSesion('Docente')"><i class="bi bi-box-arrow-right me-1"></i>Cerrar Sesión</button>
+                        <span><i class="bi bi-person-check-fill me-2"></i>Sesión Docente Activa</span>
+                        <button class="btn btn-sm btn-outline-danger fw-bold" onclick="cerrarSesion('Docente')">
+                            <i class="bi bi-box-arrow-right me-1"></i> Cerrar Sesión
+                        </button>
                     </div>
                     <div class="row g-3 align-items-end mb-3">
                         <div class="col-md-6">
-                            <label class="form-label fw-bold">Seleccionar Pestaña de la Base de Datos:</label>
+                            <label class="form-label fw-bold">Seleccionar Tabla:</label>
                             <select id="selectPestanaDocente" class="form-select">
                                 <option value="estudiantes">Estudiantes</option>
                                 <option value="calificaciones">Calificaciones</option>
                                 <option value="asistencia">Asistencia</option>
-                                <option value="CONDUCTA">Conducta</option>
+                                <option value="conducta">Conducta</option>
                             </select>
                         </div>
                         <div class="col-md-6 d-flex gap-2">
@@ -185,12 +217,13 @@
             </div>
         </section>
 
+        <!-- PORTAL ADMIN -->
         <section id="portal-admin" class="mb-5 pt-3">
             <div class="card shadow-sm border-0 p-4 bg-white border-start border-4 border-danger">
                 <div class="text-center mb-3">
                     <span class="badge bg-danger fs-6 mb-1">Administración</span>
                     <h3 class="fw-bold">Panel de Administrador</h3>
-                    <p class="text-muted small">Control Total: Gestión de usuarios y Base de Datos.</p>
+                    <p class="text-muted small">Control Total: Gestión de usuarios y registros.</p>
                 </div>
                 <div id="loginAdminBox" class="row justify-content-center">
                     <div class="col-md-6 mb-3">
@@ -202,8 +235,10 @@
                 </div>
                 <div id="panelAdminAutorizado" class="panel-oculto">
                     <div class="alert alert-danger d-flex justify-content-between align-items-center fw-bold">
-                        <span><i class="bi bi-shield-fill-check me-2"></i>¡Panel de Administrador Activo!</span>
-                        <button class="btn btn-sm btn-outline-dark fw-bold" onclick="cerrarSesion('Admin')"><i class="bi bi-box-arrow-right me-1"></i>Cerrar Sesión</button>
+                        <span><i class="bi bi-shield-fill-check me-2"></i>Panel de Administrador Activo</span>
+                        <button class="btn btn-sm btn-outline-dark fw-bold" onclick="cerrarSesion('Admin')">
+                            <i class="bi bi-box-arrow-right me-1"></i> Cerrar Sesión
+                        </button>
                     </div>
                     
                     <div class="row g-4 mb-4">
@@ -219,7 +254,7 @@
                                     </select>
                                 </div>
                                 <div class="mb-2">
-                                    <label class="small fw-bold">Nombre Completo / Descripción:</label>
+                                    <label class="small fw-bold">Nombre Completo:</label>
                                     <input type="text" id="adminNombreNuevo" class="form-control form-control-sm" placeholder="Ej: Carlos Ramírez">
                                 </div>
                                 <button class="btn btn-primary btn-sm fw-bold w-100" onclick="adminCrearUsuario()">Generar Usuario y Contraseña</button>
@@ -228,13 +263,13 @@
 
                         <div class="col-md-6">
                             <div class="p-3 bg-light rounded border">
-                                <h5 class="fw-bold text-dark mb-2"><i class="bi bi-tools text-danger me-2"></i>Gestión de Códigos y Claves</h5>
+                                <h5 class="fw-bold text-dark mb-2"><i class="bi bi-tools text-danger me-2"></i>Gestión de Credenciales</h5>
                                 <div class="mb-2">
                                     <label class="small fw-bold">Código del Usuario:</label>
-                                    <input type="text" id="adminCodigoObjetivo" class="form-control form-control-sm" placeholder="Ej: EST-001, DOC-001 o ADM-001">
+                                    <input type="text" id="adminCodigoObjetivo" class="form-control form-control-sm" placeholder="Ej: EST-001, DOC-001">
                                 </div>
                                 <div class="d-flex gap-2">
-                                    <button class="btn btn-warning btn-sm fw-bold text-dark w-50" onclick="adminResetPass()">Restablecer Contraseña</button>
+                                    <button class="btn btn-warning btn-sm fw-bold text-dark w-50" onclick="adminResetPass()">Restablecer Clave</button>
                                     <button class="btn btn-danger btn-sm fw-bold w-50" onclick="adminEliminarUsuario()">Eliminar Usuario</button>
                                 </div>
                             </div>
@@ -244,7 +279,7 @@
                     <div id="areaResultadosAdmin" class="mb-3 p-2 bg-white border rounded text-center fw-bold text-primary"></div>
 
                     <div class="mb-3">
-                        <label class="form-label fw-bold">Gestión Total de Tablas:</label>
+                        <label class="form-label fw-bold">Gestión de Tablas del Sistema:</label>
                         <div class="row g-2">
                             <div class="col-md-8">
                                 <select id="selectPestanaAdmin" class="form-select">
@@ -252,12 +287,13 @@
                                     <option value="docentes">Docentes</option>
                                     <option value="calificaciones">Calificaciones</option>
                                     <option value="asistencia">Asistencia</option>
-                                    <option value="CONDUCTA">Conducta</option>
+                                    <option value="conducta">Conducta</option>
+                                    <option value="asignaturas">Asignaturas</option>
                                 </select>
                             </div>
                             <div class="col-md-4 d-flex gap-1">
                                 <button class="btn btn-dark w-50 fw-bold" onclick="cargarDatosGenerales('Admin')">Ver Todo</button>
-                                <button class="btn btn-success w-50 fw-bold" onclick="abrirModalModificacion('Admin')">+ Insertar/Editar/Eliminar</button>
+                                <button class="btn btn-success w-50 fw-bold" onclick="abrirModalModificacion('Admin')">+ Gestionar</button>
                             </div>
                         </div>
                     </div>
@@ -265,6 +301,7 @@
             </div>
         </section>
 
+        <!-- TABLA RESULTADOS -->
         <div class="card shadow-sm border-0 mb-5">
             <div class="card-header bg-dark text-white py-3">
                 <h4 id="tituloTabla" class="fw-bold mb-0 text-center">Resultados de la Consulta</h4>
@@ -318,31 +355,33 @@
 
     </div>
 
+    <!-- MODAL DE GESTIÓN -->
     <div class="modal fade" id="modalModificacion" tabindex="-1">
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header bg-dark text-white">
-            <h5 class="modal-title fw-bold"><i class="bi bi-pencil-square text-warning me-2"></i>Gestión de Registros de Base de Datos</h5>
+            <h5 class="modal-title fw-bold"><i class="bi bi-pencil-square text-warning me-2"></i>Gestión de Registros</h5>
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
           </div>
           <div class="modal-body">
             <form id="formModificacionDatos" onsubmit="enviarDatosModificacion(event)">
                 <div class="row g-3">
                     <div class="col-md-6">
-                        <label class="form-label fw-bold">Pestaña / Tabla:</label>
+                        <label class="form-label fw-bold">Tabla Objetivo:</label>
                         <select id="modPestana" class="form-select" onchange="cambiarCamposFormularioModal()" required>
                             <option value="estudiantes">Estudiantes</option>
                             <option value="calificaciones">Calificaciones</option>
                             <option value="asistencia">Asistencia</option>
-                            <option value="CONDUCTA">Conducta</option>
+                            <option value="conducta">Conducta</option>
+                            <option value="asignaturas">Asignaturas</option>
                         </select>
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label fw-bold">Acción a realizar:</label>
+                        <label class="form-label fw-bold">Acción:</label>
                         <select id="modAccion" class="form-select" onchange="alternarVisibilidadCamposAccion()" required>
                             <option value="agregar">Agregar Registro Nuevo</option>
-                            <option value="actualizar">Modificar Existente (por Código)</option>
-                            <option value="eliminar">Eliminar Registro (por Código/Asignatura)</option>
+                            <option value="actualizar">Modificar Existente</option>
+                            <option value="eliminar">Eliminar Registro</option>
                         </select>
                     </div>
 
@@ -352,14 +391,14 @@
                     </div>
 
                     <div class="col-12 border-top pt-3 mt-3" id="seccionCamposDinamicos">
-                        <h6 class="fw-bold text-primary mb-3"><i class="bi bi-card-checklist me-1"></i> Campos del Registro:</h6>
+                        <h6 class="fw-bold text-primary mb-3"><i class="bi bi-card-checklist me-1"></i> Detalles del Registro:</h6>
                         <div id="contenedorCamposDinamicos" class="row g-3"></div>
                     </div>
                 </div>
 
                 <div class="d-flex justify-content-end gap-2 mt-4">
                     <button type="button" class="btn btn-secondary fw-bold" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="submit" id="btnGuardarModal" class="btn btn-success fw-bold"><i class="bi bi-floppy-fill me-1"></i> Procesar Solicitud</button>
+                    <button type="submit" id="btnGuardarModal" class="btn btn-success fw-bold"><i class="bi bi-floppy-fill me-1"></i> Procesar</button>
                 </div>
             </form>
           </div>
@@ -375,228 +414,247 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        const URL_API = "https://script.google.com/macros/s/AKfycbxs7HhuvdTHUv9YxtEDfZWBBd_2c9Q3VgaUmgCwv1cj5pd05WwY1xfGPvbGEZY3t6w/exec"; 
+        const URL_API = "https://script.google.com/macros/s/AKfycbxPo5n8K0epizaVG-iZWBdz2fd_cxj7vbN0zgTuijC6AHqAQXagnOzmtEz3qr7Rofuo/exec"; 
 
-        // GESTIÓN DE SEGURIDAD Y SESIÓN (TOKENS)
-        let tokenSesionActiva = "";
+        let tokens = {
+            docente: "",
+            admin: ""
+        };
 
+        let sesionEstudiante = {
+            codigo: "",
+            pass: ""
+        };
+
+        function escapeHTML(str) {
+            if (typeof str !== 'string') return str;
+            return str.replace(/[&<>'"]/g, 
+                tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+            );
+        }
+
+        async function solicitarAPI(payload) {
+            try {
+                let response = await fetch(URL_API, {
+                    method: 'POST',
+                    mode: 'cors',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify(payload)
+                });
+                return await response.json();
+            } catch(e) {
+                return { success: false, message: "Error de red o conexión con la base de datos." };
+            }
+        }
+
+        // FUNCIÓN CERRAR SESIÓN PARA LOS TRES USUARIOS
         function cerrarSesion(rol) {
-            tokenSesionActiva = "";
-            if (rol === 'Docente') {
+            if (rol === 'Estudiante') {
+                sesionEstudiante = { codigo: "", pass: "" };
+                document.getElementById("inputCodigoEstudiante").value = "";
+                document.getElementById("inputPassEstudiante").value = "";
+                document.getElementById("panelEstudianteAutorizado").style.display = "none";
+                document.getElementById("loginEstudianteBox").style.display = "flex";
+                
+                document.getElementById("tablaHead").innerHTML = "";
+                document.getElementById("tablaBody").innerHTML = `<tr><td colspan="8" class="text-muted py-4">Seleccione su portal e ingrese para consultar datos.</td></tr>`;
+                document.getElementById("tituloTabla").innerText = "Resultados de la Consulta";
+                alert("Sesión de Estudiante cerrada.");
+            } else if (rol === 'Docente') {
+                tokens.docente = "";
                 document.getElementById("panelDocenteAutorizado").style.display = "none";
                 document.getElementById("loginDocenteBox").style.display = "flex";
                 document.getElementById("inputUsuarioDocente").value = "";
                 document.getElementById("inputPassDocente").value = "";
-                alert("Sesión de docente cerrada correctamente.");
+                alert("Sesión de docente cerrada.");
             } else if (rol === 'Admin') {
+                tokens.admin = "";
                 document.getElementById("panelAdminAutorizado").style.display = "none";
                 document.getElementById("loginAdminBox").style.display = "flex";
                 document.getElementById("inputClaveAdmin").value = "";
-                alert("Sesión de administrador cerrada correctamente.");
+                if (document.getElementById("areaResultadosAdmin")) {
+                    document.getElementById("areaResultadosAdmin").innerText = "";
+                }
+                alert("Sesión de administrador cerrada.");
             }
         }
 
-        // CONSULTA DE ESTUDIANTES (ACCESO PÚBLICO / ALUMNO)
-        async function consultarEstudiantePorCodigo() {
-            let codigo = document.getElementById("inputCodigoEstudiante").value.trim();
-            let pass = document.getElementById("inputPassEstudiante").value.trim();
-            let pestana = document.getElementById("selectPestanaEstudiante").value;
+        async function ejecutarConsultaEstudiante(codigo, pass, pestana) {
             let titulo = document.getElementById("tituloTabla");
             let tablaHead = document.getElementById("tablaHead");
             let tablaBody = document.getElementById("tablaBody");
 
-            if(!codigo || !pass) { alert("Ingrese su código y contraseña"); return; }
-
             titulo.innerText = `Consultando datos de ${codigo}...`;
             tablaBody.innerHTML = `<tr><td colspan="8"><div class="spinner-border text-primary" role="status"></div> Cargando...</td></tr>`;
 
-            try {
-                let res = await fetch(`${URL_API}?accion=consultarEstudiante&codigo=${encodeURIComponent(codigo)}&pass=${encodeURIComponent(pass)}&pestana=${encodeURIComponent(pestana)}`);
-                let data = await res.json();
+            let data = await solicitarAPI({
+                accion: "consultarEstudiante",
+                codigo: codigo,
+                pass: pass,
+                pestana: pestana
+            });
 
-                if(!data.success) {
-                    tablaBody.innerHTML = `<tr><td colspan='8' class='text-danger py-3'>${data.message || 'Error de verificación.'}</td></tr>`;
-                    return;
-                }
+            if(!data.success) {
+                tablaBody.innerHTML = `<tr><td colspan='8' class='text-danger py-3'>${escapeHTML(data.message || 'Error de verificación.')}</td></tr>`;
+                return false;
+            }
 
-                if(!data.filas || data.filas.length === 0) {
-                    tablaBody.innerHTML = "<tr><td colspan='8' class='text-warning py-3'>No hay registros disponibles para este código.</td></tr>";
-                    return;
-                }
-
+            if(!data.filas || data.filas.length === 0) {
+                tablaBody.innerHTML = "<tr><td colspan='8' class='text-warning py-3'>No hay registros disponibles para este código.</td></tr>";
+            } else {
                 let llaves = Object.keys(data.filas[0]);
                 titulo.innerText = `Registros de ${codigo} (${pestana.toUpperCase()})`;
-                tablaHead.innerHTML = `<tr>${llaves.map(k => `<th>${k.toUpperCase()}</th>`).join('')}</tr>`;
-                tablaBody.innerHTML = data.filas.map(row => `<tr>${llaves.map(k => `<td>${row[k] !== undefined ? row[k] : ''}</td>`).join('')}</tr>`).join('');
-            } catch(e) {
-                tablaBody.innerHTML = "<tr><td colspan='8' class='text-danger py-3'>Error al conectar con la base de datos.</td></tr>";
+                tablaHead.innerHTML = `<tr>${llaves.map(k => `<th>${escapeHTML(k.toUpperCase())}</th>`).join('')}</tr>`;
+                tablaBody.innerHTML = data.filas.map(row => `<tr>${llaves.map(k => `<td>${escapeHTML(row[k] !== undefined ? String(row[k]) : '')}</td>`).join('')}</tr>`).join('');
+            }
+            return true;
+        }
+
+        async function consultarEstudiantePorCodigo() {
+            let codigo = document.getElementById("inputCodigoEstudiante").value.trim();
+            let pass = document.getElementById("inputPassEstudiante").value.trim();
+            let pestana = document.getElementById("selectPestanaEstudiante").value;
+
+            if(!codigo || !pass) { alert("Ingrese su código y contraseña"); return; }
+
+            let exito = await ejecutarConsultaEstudiante(codigo, pass, pestana);
+            if(exito) {
+                sesionEstudiante.codigo = codigo;
+                sesionEstudiante.pass = pass;
+                document.getElementById("loginEstudianteBox").style.display = "none";
+                document.getElementById("panelEstudianteAutorizado").style.display = "block";
+                document.getElementById("selectPestanaEstudianteActivo").value = pestana;
             }
         }
 
-        // LOGIN DOCENTES
+        async function consultarEstudianteActivo() {
+            if(!sesionEstudiante.codigo || !sesionEstudiante.pass) {
+                alert("No hay una sesión de estudiante activa.");
+                return;
+            }
+            let pestana = document.getElementById("selectPestanaEstudianteActivo").value;
+            await ejecutarConsultaEstudiante(sesionEstudiante.codigo, sesionEstudiante.pass, pestana);
+        }
+
         async function verificarDocente() {
             let usuario = document.getElementById("inputUsuarioDocente").value.trim();
             let pass = document.getElementById("inputPassDocente").value.trim();
             if(!usuario || !pass) { alert("Complete usuario y contraseña"); return; }
 
-            try {
-                let res = await fetch(`${URL_API}?accion=loginDocentes&codigo=${encodeURIComponent(usuario)}&pass=${encodeURIComponent(pass)}`);
-                let data = await res.json();
-                if(data.success) {
-                    tokenSesionActiva = data.token; // Se almacena el token de sesión
-                    document.getElementById("loginDocenteBox").style.display = "none";
-                    document.getElementById("panelDocenteAutorizado").style.display = "block";
-                    alert("¡Acceso de Docente Concedido!");
-                } else {
-                    alert(data.message || "Credenciales docentes incorrectas.");
-                }
-            } catch(e) { alert("Error al conectar con la base de datos."); }
+            let data = await solicitarAPI({ accion: "loginDocentes", codigo: usuario, pass: pass });
+            if(data.success) {
+                tokens.docente = data.token;
+                document.getElementById("loginDocenteBox").style.display = "none";
+                document.getElementById("panelDocenteAutorizado").style.display = "block";
+            } else {
+                alert(data.message || "Credenciales incorrectas.");
+            }
         }
 
-        // LOGIN ADMIN
         async function verificarAdmin() {
             let clave = document.getElementById("inputClaveAdmin").value.trim();
             if(!clave) { alert("Ingrese la clave de administrador"); return; }
-            try {
-                let res = await fetch(`${URL_API}?accion=loginAdmin&clave=${encodeURIComponent(clave)}`);
-                let data = await res.json();
-                if(data.success) {
-                    tokenSesionActiva = data.token; // Se almacena el token de sesión
-                    document.getElementById("loginAdminBox").style.display = "none";
-                    document.getElementById("panelAdminAutorizado").style.display = "block";
-                    alert("¡Bienvenido al Panel de Administrador!");
-                } else {
-                    alert(data.message || "Clave de administrador incorrecta.");
-                }
-            } catch(e) { alert("Error de conexión."); }
+
+            let data = await solicitarAPI({ accion: "loginAdmin", clave: clave });
+            if(data.success) {
+                tokens.admin = data.token;
+                document.getElementById("loginAdminBox").style.display = "none";
+                document.getElementById("panelAdminAutorizado").style.display = "block";
+            } else {
+                alert(data.message || "Clave incorrecta.");
+            }
         }
 
-        // CARGAR DATOS TABLAS GENERALES CON TOKEN
         async function cargarDatosGenerales(rol) {
-            if(!tokenSesionActiva) { alert("Sesión no autorizada o expirada."); return; }
+            let token = rol === 'Docente' ? tokens.docente : tokens.admin;
+            if(!token) { alert("Sesión no válida o expirada."); return; }
+
             let pestana = rol === 'Docente' ? document.getElementById("selectPestanaDocente").value : document.getElementById("selectPestanaAdmin").value;
             let tablaHead = document.getElementById("tablaHead");
             let tablaBody = document.getElementById("tablaBody");
 
-            tablaBody.innerHTML = `<tr><td colspan="8"><div class="spinner-border text-primary"></div> Obteniendo datos...</td></tr>`;
+            tablaBody.innerHTML = `<tr><td colspan="8"><div class="spinner-border text-primary"></div> Cargando datos...</td></tr>`;
 
-            try {
-                let res = await fetch(`${URL_API}?accion=cargarDatosGenerales&pestana=${encodeURIComponent(pestana)}&token=${encodeURIComponent(tokenSesionActiva)}`);
-                let data = await res.json();
+            let data = await solicitarAPI({ accion: "cargarDatosGenerales", pestana: pestana, token: token });
 
-                if(data.success && data.filas && data.filas.length > 0) {
-                    let llaves = Object.keys(data.filas[0]);
-                    document.getElementById("tituloTabla").innerText = `Tabla General: ${pestana.toUpperCase()}`;
-                    
-                    let headerHTML = `<tr>${llaves.map(k => `<th>${k.toUpperCase()}</th>`).join('')}<th>ACCIONES</th></tr>`;
-                    tablaHead.innerHTML = headerHTML;
+            if(data.success && data.filas && data.filas.length > 0) {
+                let llaves = Object.keys(data.filas[0]);
+                document.getElementById("tituloTabla").innerText = `Tabla: ${pestana.toUpperCase()}`;
+                
+                tablaHead.innerHTML = `<tr>${llaves.map(k => `<th>${escapeHTML(k.toUpperCase())}</th>`).join('')}<th>ACCIONES</th></tr>`;
 
-                    tablaBody.innerHTML = data.filas.map(row => {
-                        let codigoReg = row.codigo || row.CODIGO || row.ID || "";
-                        let asigReg = row.asignatura || row.ASIGNATURA || "";
-                        return `<tr>
-                            ${llaves.map(k => `<td>${row[k] !== undefined ? row[k] : ''}</td>`).join('')}
-                            <td>
-                                <button class="btn btn-sm btn-danger" onclick="eliminarFilaDirecta('${pestana}', '${codigoReg}', '${asigReg}')">
-                                    <i class="bi bi-trash-fill"></i> Eliminar
-                                </button>
-                            </td>
-                        </tr>`;
-                    }).join('');
-                } else {
-                    tablaBody.innerHTML = `<tr><td colspan='8' class='text-warning py-3'>${data.message || 'La pestaña no tiene datos registrados.'}</td></tr>`;
-                }
-            } catch(e) { alert("Error al consultar datos."); }
+                tablaBody.innerHTML = data.filas.map(row => {
+                    let codigoReg = row.codigo || row.CODIGO || row.ID || "";
+                    let asigReg = row.asignatura || row.ASIGNATURA || "";
+                    return `<tr>
+                        ${llaves.map(k => `<td>${escapeHTML(row[k] !== undefined ? String(row[k]) : '')}</td>`).join('')}
+                        <td>
+                            <button class="btn btn-sm btn-danger" onclick="eliminarFilaDirecta('${escapeHTML(pestana)}', '${escapeHTML(codigoReg)}', '${escapeHTML(asigReg)}', '${rol}')">
+                                <i class="bi bi-trash-fill"></i> Eliminar
+                            </button>
+                        </td>
+                    </tr>`;
+                }).join('');
+            } else {
+                tablaBody.innerHTML = `<tr><td colspan='8' class='text-warning py-3'>${escapeHTML(data.message || 'Sin registros.')}</td></tr>`;
+            }
         }
 
-        // ELIMINAR REGISTRO DIRECTO DE LA TABLA
-        async function eliminarFilaDirecta(pestana, codigo, asignatura) {
-            if(!tokenSesionActiva) { alert("Sesión no válida."); return; }
-            if(!codigo) { alert("No se puede identificar el código del registro."); return; }
-            let msj = asignatura ? `¿Está seguro de eliminar la asignatura "${asignatura}" para el código ${codigo}?` : `¿Está seguro de eliminar el registro de ${codigo}?`;
-            if(!confirm(msj)) return;
+        async function eliminarFilaDirecta(pestana, codigo, asignatura, rol) {
+            let token = rol === 'Docente' ? tokens.docente : tokens.admin;
+            if(!token) { alert("Sesión no válida."); return; }
+            if(!codigo) { alert("Código no válido."); return; }
 
-            try {
-                let res = await fetch(`${URL_API}?accion=modificarDatos&modPestana=${encodeURIComponent(pestana)}&modAccion=eliminar&modCodigo=${encodeURIComponent(codigo)}&asignatura=${encodeURIComponent(asignatura)}&token=${encodeURIComponent(tokenSesionActiva)}`);
-                let data = await res.json();
-                if(data.success) {
-                    alert("Registro eliminado con éxito.");
-                    cargarDatosGenerales('Admin');
-                } else {
-                    alert(data.message || "Error al eliminar el registro.");
-                }
-            } catch(e) { alert("Error de comunicación."); }
+            if(!confirm(`¿Desea eliminar el registro ${codigo}?`)) return;
+
+            let data = await solicitarAPI({
+                accion: "modificarDatos",
+                modPestana: pestana,
+                modAccion: "eliminar",
+                modCodigo: codigo,
+                asignatura: asignatura,
+                token: token
+            });
+
+            alert(data.message);
+            if(data.success) cargarDatosGenerales(rol);
         }
 
-        // FUNCIONES ADMIN PARA CREAR/RESET/ELIMINAR USUARIO
         async function adminCrearUsuario() {
-            if(!tokenSesionActiva) { alert("Sesión requerida."); return; }
+            if(!tokens.admin) return;
             let tipo = document.getElementById("adminTipoNuevo").value;
             let nombre = document.getElementById("adminNombreNuevo").value.trim();
-            if(!nombre) { alert("Ingrese el nombre completo"); return; }
+            if(!nombre) { alert("Ingrese el nombre"); return; }
 
-            try {
-                let res = await fetch(`${URL_API}?accion=crearUsuario&tipo=${tipo}&nombre=${encodeURIComponent(nombre)}&token=${encodeURIComponent(tokenSesionActiva)}`);
-                let data = await res.json();
-                if(data.success) {
-                    document.getElementById("areaResultadosAdmin").innerHTML = 
-                        `Usuario creado con éxito. Código: <b class="text-success">${data.codigo}</b> | Contraseña Temporal: <b class="text-danger">${data.tempPass}</b>`;
-                    document.getElementById("adminNombreNuevo").value = "";
-                } else { alert(data.message || "Error al registrar el usuario."); }
-            } catch(e) { alert("Error de red."); }
+            let data = await solicitarAPI({ accion: "adminCrearUsuario", tipo: tipo, nombre: nombre, token: tokens.admin });
+            document.getElementById("areaResultadosAdmin").innerText = data.message;
         }
 
         async function adminResetPass() {
-            if(!tokenSesionActiva) { alert("Sesión requerida."); return; }
+            if(!tokens.admin) return;
             let codigo = document.getElementById("adminCodigoObjetivo").value.trim();
-            if(!codigo) { alert("Ingrese el código del usuario"); return; }
+            if(!codigo) { alert("Ingrese el código"); return; }
 
-            try {
-                let res = await fetch(`${URL_API}?accion=resetPass&codigo=${encodeURIComponent(codigo)}&token=${encodeURIComponent(tokenSesionActiva)}`);
-                let data = await res.json();
-                if(data.success) {
-                    document.getElementById("areaResultadosAdmin").innerHTML = `Contraseña restablecida para ${codigo}. Nueva clave temporal: <b class="text-danger">${data.tempPass}</b>`;
-                } else { alert(data.message || "No se encontró el código especificado."); }
-            } catch(e) { alert("Error de conexión."); }
+            let data = await solicitarAPI({ accion: "adminResetPass", codigo: codigo, token: tokens.admin });
+            document.getElementById("areaResultadosAdmin").innerText = data.message;
         }
 
         async function adminEliminarUsuario() {
-            if(!tokenSesionActiva) { alert("Sesión requerida."); return; }
+            if(!tokens.admin) return;
             let codigo = document.getElementById("adminCodigoObjetivo").value.trim();
-            if(!codigo || !confirm(`¿Seguro que desea eliminar al usuario ${codigo}?`)) return;
+            if(!codigo) { alert("Ingrese el código"); return; }
+            if(!confirm(`¿Confirma eliminar el usuario ${codigo}?`)) return;
 
-            try {
-                let res = await fetch(`${URL_API}?accion=eliminarUsuario&codigo=${encodeURIComponent(codigo)}&token=${encodeURIComponent(tokenSesionActiva)}`);
-                let data = await res.json();
-                if(data.success) {
-                    alert("Usuario eliminado con éxito.");
-                    document.getElementById("adminCodigoObjetivo").value = "";
-                    document.getElementById("areaResultadosAdmin").innerHTML = "";
-                } else { alert(data.message || "No se pudo eliminar el usuario."); }
-            } catch(e) { alert("Error al conectar con la base de datos."); }
+            let data = await solicitarAPI({ accion: "adminEliminarUsuario", codigo: codigo, token: tokens.admin });
+            document.getElementById("areaResultadosAdmin").innerText = data.message;
         }
 
-        // MODAL Y FORMULARIO DINÁMICO
+        let rolModalActivo = "";
         function abrirModalModificacion(rol) {
+            rolModalActivo = rol;
+            let myModal = new bootstrap.Modal(document.getElementById('modalModificacion'));
             cambiarCamposFormularioModal();
-            let modal = new bootstrap.Modal(document.getElementById('modalModificacion'));
-            modal.show();
-        }
-
-        function alternarVisibilidadCamposAccion() {
-            let accion = document.getElementById("modAccion").value;
-            let seccionCampos = document.getElementById("seccionCamposDinamicos");
-            let btn = document.getElementById("btnGuardarModal");
-
-            if (accion === 'eliminar') {
-                seccionCampos.style.display = "none";
-                btn.className = "btn btn-danger fw-bold";
-                btn.innerHTML = `<i class="bi bi-trash-fill me-1"></i> Eliminar Registro`;
-            } else {
-                seccionCampos.style.display = "block";
-                btn.className = "btn btn-success fw-bold";
-                btn.innerHTML = `<i class="bi bi-floppy-fill me-1"></i> Guardar Cambios`;
-            }
+            myModal.show();
         }
 
         function cambiarCamposFormularioModal() {
@@ -604,105 +662,62 @@
             let contenedor = document.getElementById("contenedorCamposDinamicos");
             contenedor.innerHTML = "";
 
-            if (pestana === "calificaciones") {
-                contenedor.innerHTML = `
+            let campos = [];
+            if(pestana === "calificaciones") campos = ["Asignatura", "Nota_Periodo_1", "Nota_Periodo_2", "Nota_Periodo_3", "Nota_Final"];
+            else if(pestana === "asistencia") campos = ["Asignatura", "Fecha", "Estado"];
+            else if(pestana === "conducta") campos = ["Fecha", "Observacion", "Tipo"];
+            else if(pestana === "estudiantes") campos = ["Nombre", "Grado", "Seccion", "Encargado"];
+            else if(pestana === "asignaturas") campos = ["Nombre_Asignatura", "Docente_Asignado"];
+
+            campos.forEach(campo => {
+                contenedor.innerHTML += `
                     <div class="col-md-6">
-                        <label class="form-label small fw-bold">ASIGNATURA:</label>
-                        <input type="text" class="form-control campo-dinamico" data-campo="asignatura" placeholder="Ej: Matemáticas" required>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label small fw-bold">PERIODO / UNIDAD:</label>
-                        <input type="text" class="form-control campo-dinamico" data-campo="periodo" placeholder="Ej: Periodo 1">
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label small fw-bold">NOTA 1 (0-10):</label>
-                        <input type="number" step="0.1" min="0" max="10" class="form-control campo-dinamico" data-campo="nota1" placeholder="0.0">
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label small fw-bold">NOTA 2 (0-10):</label>
-                        <input type="number" step="0.1" min="0" max="10" class="form-control campo-dinamico" data-campo="nota2" placeholder="0.0">
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label small fw-bold">NOTA 3 (0-10):</label>
-                        <input type="number" step="0.1" min="0" max="10" class="form-control campo-dinamico" data-campo="nota3" placeholder="0.0">
-                    </div>
-                `;
-            } else if (pestana === "estudiantes") {
-                contenedor.innerHTML = `
-                    <div class="col-md-6"><label class="form-label small fw-bold">NOMBRE:</label><input type="text" class="form-control campo-dinamico" data-campo="nombre"></div>
-                    <div class="col-md-6"><label class="form-label small fw-bold">GRADO:</label><input type="text" class="form-control campo-dinamico" data-campo="grado"></div>
-                    <div class="col-md-12"><label class="form-label small fw-bold">EMAIL / CONTACTO:</label><input type="email" class="form-control campo-dinamico" data-campo="email"></div>
-                `;
-            } else if (pestana === "asistencia") {
-                contenedor.innerHTML = `
-                    <div class="col-md-6"><label class="form-label small fw-bold">FECHA:</label><input type="date" class="form-control campo-dinamico" data-campo="fecha"></div>
-                    <div class="col-md-6"><label class="form-label small fw-bold">ESTADO:</label>
-                        <select class="form-select campo-dinamico" data-campo="estado">
-                            <option value="Presente">Presente</option>
-                            <option value="Ausente">Ausente</option>
-                            <option value="Permiso">Permiso</option>
-                        </select>
-                    </div>
-                `;
-            } else if (pestana === "CONDUCTA") {
-                contenedor.innerHTML = `
-                    <div class="col-md-6"><label class="form-label small fw-bold">FECHA:</label><input type="date" class="form-control campo-dinamico" data-campo="fecha"></div>
-                    <div class="col-md-6"><label class="form-label small fw-bold">OBSERVACIÓN:</label><input type="text" class="form-control campo-dinamico" data-campo="observacion"></div>
-                `;
-            }
-            alternarVisibilidadCamposAccion();
+                        <label class="form-label small fw-bold">${campo.replace(/_/g, ' ')}:</label>
+                        <input type="text" data-campo="${campo}" class="form-control form-control-sm campo-dinamico">
+                    </div>`;
+            });
+        }
+
+        function alternarVisibilidadCamposAccion() {
+            let accion = document.getElementById("modAccion").value;
+            document.getElementById("seccionCamposDinamicos").style.display = (accion === "eliminar") ? "none" : "block";
         }
 
         async function enviarDatosModificacion(e) {
             e.preventDefault();
-            if(!tokenSesionActiva) { alert("Sesión expirada o no iniciada."); return; }
+            let token = rolModalActivo === 'Docente' ? tokens.docente : tokens.admin;
+            if(!token) { alert("Sesión inválida."); return; }
 
             let pestana = document.getElementById("modPestana").value;
             let accion = document.getElementById("modAccion").value;
             let codigo = document.getElementById("modCodigo").value.trim();
 
-            let payload = {
+            let payloadCampos = {};
+            document.querySelectorAll(".campo-dinamico").forEach(input => {
+                payloadCampos[input.getAttribute("data-campo")] = input.value.trim();
+            });
+
+            let data = await solicitarAPI({
                 accion: "modificarDatos",
                 modPestana: pestana,
                 modAccion: accion,
                 modCodigo: codigo,
-                token: tokenSesionActiva
-            };
+                datos: payloadCampos,
+                token: token
+            });
 
-            if (accion !== 'eliminar') {
-                let campos = document.querySelectorAll(".campo-dinamico");
-                campos.forEach(input => {
-                    let nombreCampo = input.getAttribute("data-campo");
-                    payload[nombreCampo] = input.value;
-                });
-            } else {
-                let asigInput = document.querySelector('.campo-dinamico[data-campo="asignatura"]');
-                if(asigInput) payload.asignatura = asigInput.value;
-            }
-
-            try {
-                let queryParams = new URLSearchParams(payload).toString();
-                let res = await fetch(`${URL_API}?${queryParams}`);
-                let data = await res.json();
-
-                if(data.success) {
-                    alert(data.message || "Operación realizada con éxito.");
-                    let modalElem = document.getElementById('modalModificacion');
-                    let modal = bootstrap.Modal.getInstance(modalElem);
-                    if(modal) modal.hide();
-                } else {
-                    alert(data.message || "Error al realizar la operación.");
-                }
-            } catch(err) {
-                alert("Error de comunicación al enviar datos.");
+            alert(data.message);
+            if(data.success) {
+                bootstrap.Modal.getInstance(document.getElementById('modalModificacion')).hide();
+                cargarDatosGenerales(rolModalActivo);
             }
         }
 
-        function enviarWhatsAppDirecto(e) {
-            e.preventDefault();
+        function enviarWhatsAppDirecto(event) {
+            event.preventDefault();
             let nombre = document.getElementById("wsNombre").value.trim();
-            let mensaje = document.getElementById("wsGrado").value.trim();
-            let texto = encodeURIComponent(`Hola, mi nombre es ${nombre}. Consulta: ${mensaje}`);
+            let grado = document.getElementById("wsGrado").value.trim();
+            let texto = encodeURIComponent(`Hola, soy ${nombre}. Consulta: ${grado}`);
             window.open(`https://wa.me/50375982371?text=${texto}`, '_blank');
         }
     </script>
