@@ -118,7 +118,6 @@
                     <p class="text-muted small">Ingrese con su código asignado y contraseña para consultar sus registros.</p>
                 </div>
 
-                <!-- FORMULARIO DE INGRESO ESTUDIANTE -->
                 <div id="loginEstudianteBox" class="row justify-content-center">
                     <div class="col-md-5 mb-3">
                         <label class="form-label fw-bold">Código de Estudiante:</label>
@@ -144,7 +143,6 @@
                     </div>
                 </div>
 
-                <!-- PANEL SESIÓN ACTIVA ESTUDIANTE -->
                 <div id="panelEstudianteAutorizado" class="panel-oculto">
                     <div class="alert alert-primary d-flex justify-content-between align-items-center fw-bold">
                         <span><i class="bi bi-person-check-fill me-2"></i>Consulta de Estudiante Activa</span>
@@ -414,11 +412,11 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        const URL_API = "https://script.google.com/macros/s/AKfycbyf-Jm9g2_NDeYFH6-F_A4s-1Zrkj72_R8ULjSlxhebR7fMcxucSVfrSwcL-aMv4A/exec"; 
+        const URL_API = "https://script.google.com/macros/s/AKfycbxPo5n8K0epizaVG-iZWBdz2fd_cxj7vbN0zgTuijC6AHqAQXagnOzmtEz3qr7Rofuo/exec"; 
 
         let tokens = {
-            docente: "",
-            admin: ""
+            docente: sessionStorage.getItem("tokenDocente") || "",
+            admin: sessionStorage.getItem("tokenAdmin") || ""
         };
 
         let sesionEstudiante = {
@@ -427,6 +425,18 @@
         };
 
         let rolActivoModal = "";
+
+        // Recuperar paneles activos tras recargar la página
+        window.addEventListener("DOMContentLoaded", () => {
+            if (tokens.admin) {
+                document.getElementById("loginAdminBox").style.display = "none";
+                document.getElementById("panelAdminAutorizado").style.display = "block";
+            }
+            if (tokens.docente) {
+                document.getElementById("loginDocenteBox").style.display = "none";
+                document.getElementById("panelDocenteAutorizado").style.display = "block";
+            }
+        });
 
         function escapeHTML(str) {
             if (typeof str !== 'string') return str;
@@ -463,6 +473,7 @@
                 alert("Sesión de Estudiante cerrada.");
             } else if (rol === 'Docente') {
                 tokens.docente = "";
+                sessionStorage.removeItem("tokenDocente");
                 document.getElementById("panelDocenteAutorizado").style.display = "none";
                 document.getElementById("loginDocenteBox").style.display = "flex";
                 document.getElementById("inputUsuarioDocente").value = "";
@@ -470,6 +481,7 @@
                 alert("Sesión de docente cerrada.");
             } else if (rol === 'Admin') {
                 tokens.admin = "";
+                sessionStorage.removeItem("tokenAdmin");
                 document.getElementById("panelAdminAutorizado").style.display = "none";
                 document.getElementById("loginAdminBox").style.display = "flex";
                 document.getElementById("inputClaveAdmin").value = "";
@@ -545,6 +557,7 @@
             let data = await solicitarAPI({ accion: "loginDocentes", codigo: usuario, pass: pass });
             if(data.success) {
                 tokens.docente = data.token;
+                sessionStorage.setItem("tokenDocente", data.token);
                 document.getElementById("loginDocenteBox").style.display = "none";
                 document.getElementById("panelDocenteAutorizado").style.display = "block";
             } else {
@@ -559,6 +572,7 @@
             let data = await solicitarAPI({ accion: "loginAdmin", clave: clave });
             if(data.success) {
                 tokens.admin = data.token;
+                sessionStorage.setItem("tokenAdmin", data.token);
                 document.getElementById("loginAdminBox").style.display = "none";
                 document.getElementById("panelAdminAutorizado").style.display = "block";
             } else {
@@ -567,9 +581,15 @@
         }
 
         async function cargarDatosGenerales(rol) {
+            let token = rol === 'Docente' ? tokens.docente : tokens.admin;
+            if(!token) {
+                alert("Su sesión ha expirado. Por favor, vuelva a ingresar.");
+                cerrarSesion(rol);
+                return;
+            }
+
             let selectId = rol === 'Docente' ? "selectPestanaDocente" : "selectPestanaAdmin";
             let pestana = document.getElementById(selectId).value;
-            let token = rol === 'Docente' ? tokens.docente : tokens.admin;
 
             let titulo = document.getElementById("tituloTabla");
             let tablaHead = document.getElementById("tablaHead");
@@ -586,6 +606,9 @@
 
             if(!data.success) {
                 tablaBody.innerHTML = `<tr><td colspan='8' class='text-danger py-3'>${escapeHTML(data.message || 'Error al obtener datos.')}</td></tr>`;
+                if(data.message && data.message.toLowerCase().includes("expirada")) {
+                    cerrarSesion(rol);
+                }
                 return;
             }
 
@@ -600,6 +623,12 @@
         }
 
         async function adminCrearUsuario() {
+            if(!tokens.admin) {
+                alert("Su sesión ha expirado. Ingrese la clave de administrador de nuevo.");
+                cerrarSesion('Admin');
+                return;
+            }
+
             let tipo = document.getElementById("adminTipoNuevo").value;
             let nombre = document.getElementById("adminNombreNuevo").value.trim();
             if(!nombre) { alert("Ingrese un nombre completo."); return; }
@@ -619,10 +648,19 @@
                 document.getElementById("adminNombreNuevo").value = "";
             } else {
                 area.innerText = data.message || "Error al crear el usuario.";
+                if(data.message && data.message.toLowerCase().includes("expirada")) {
+                    cerrarSesion('Admin');
+                }
             }
         }
 
         async function adminResetPass() {
+            if(!tokens.admin) {
+                alert("Su sesión ha expirado. Ingrese la clave de administrador de nuevo.");
+                cerrarSesion('Admin');
+                return;
+            }
+
             let codigo = document.getElementById("adminCodigoObjetivo").value.trim();
             if(!codigo) { alert("Ingrese un código de usuario."); return; }
 
@@ -639,10 +677,19 @@
                 area.innerHTML = `<strong>¡Clave Restablecida!</strong> Usuario: <span class="text-dark">${codigo}</span> | Nueva Clave: <span class="text-dark">${data.nuevaPass}</span>`;
             } else {
                 area.innerText = data.message || "Error al restablecer contraseña.";
+                if(data.message && data.message.toLowerCase().includes("expirada")) {
+                    cerrarSesion('Admin');
+                }
             }
         }
 
         async function adminEliminarUsuario() {
+            if(!tokens.admin) {
+                alert("Su sesión ha expirado. Ingrese la clave de administrador de nuevo.");
+                cerrarSesion('Admin');
+                return;
+            }
+
             let codigo = document.getElementById("adminCodigoObjetivo").value.trim();
             if(!codigo) { alert("Ingrese un código de usuario."); return; }
 
@@ -662,6 +709,9 @@
                 document.getElementById("adminCodigoObjetivo").value = "";
             } else {
                 area.innerText = data.message || "Error al eliminar usuario.";
+                if(data.message && data.message.toLowerCase().includes("expirada")) {
+                    cerrarSesion('Admin');
+                }
             }
         }
 
@@ -735,6 +785,12 @@
         async function enviarDatosModificacion(e) {
             e.preventDefault();
             let token = rolActivoModal === 'Docente' ? tokens.docente : tokens.admin;
+            if(!token) {
+                alert("Su sesión ha expirado. Por favor, inicie sesión nuevamente.");
+                cerrarSesion(rolActivoModal);
+                return;
+            }
+
             let pestana = document.getElementById("modPestana").value;
             let accion = document.getElementById("modAccion").value;
             let codigo = document.getElementById("modCodigo").value.trim();
@@ -772,6 +828,9 @@
                 cargarDatosGenerales(rolActivoModal);
             } else {
                 alert(response.message || "Ocurrió un error al procesar.");
+                if(response.message && response.message.toLowerCase().includes("expirada")) {
+                    cerrarSesion(rolActivoModal);
+                }
             }
         }
 
