@@ -121,11 +121,11 @@
                 <div id="loginEstudianteBox" class="row justify-content-center">
                     <div class="col-md-5 mb-3">
                         <label class="form-label fw-bold">Código de Estudiante:</label>
-                        <input type="text" id="inputCodigoEstudiante" class="form-control" placeholder="Ej: EST-001">
+                        <input type="text" id="inputCodigoEstudiante" class="form-control" placeholder="Ej: EST-001" autocomplete="off">
                     </div>
                     <div class="col-md-5 mb-3">
                         <label class="form-label fw-bold">Contraseña:</label>
-                        <input type="password" id="inputPassEstudiante" class="form-control" placeholder="Contraseña">
+                        <input type="password" id="inputPassEstudiante" class="form-control" placeholder="Contraseña" autocomplete="current-password">
                     </div>
                     <div class="col-md-10 mb-3">
                         <label class="form-label fw-bold">Sección a Consultar:</label>
@@ -146,7 +146,7 @@
                 <div id="panelEstudianteAutorizado" class="panel-oculto">
                     <div class="alert alert-primary d-flex justify-content-between align-items-center fw-bold">
                         <span><i class="bi bi-person-check-fill me-2"></i>Consulta de Estudiante Activa</span>
-                        <button class="btn btn-sm btn-outline-danger fw-bold" onclick="cerrarSesion('Estudiante')">
+                        <button class="btn btn-sm btn-outline-danger fw-bold" onclick="cerrarSesion('Estudiante', true)">
                             <i class="bi bi-box-arrow-right me-1"></i> Cerrar Sesión
                         </button>
                     </div>
@@ -180,10 +180,10 @@
                 </div>
                 <div id="loginDocenteBox" class="row justify-content-center">
                     <div class="col-md-5 mb-3">
-                        <input type="text" id="inputUsuarioDocente" class="form-control" placeholder="Código Docente (Ej: DOC-001)">
+                        <input type="text" id="inputUsuarioDocente" class="form-control" placeholder="Código Docente (Ej: DOC-001)" autocomplete="off">
                     </div>
                     <div class="col-md-5 mb-3">
-                        <input type="password" id="inputPassDocente" class="form-control" placeholder="Contraseña">
+                        <input type="password" id="inputPassDocente" class="form-control" placeholder="Contraseña" autocomplete="current-password">
                     </div>
                     <div class="col-12 text-center">
                         <button class="btn btn-success fw-bold px-5" onclick="verificarDocente()">Ingresar</button>
@@ -192,7 +192,7 @@
                 <div id="panelDocenteAutorizado" class="panel-oculto">
                     <div class="alert alert-success d-flex justify-content-between align-items-center fw-bold">
                         <span><i class="bi bi-person-check-fill me-2"></i>Sesión Docente Activa</span>
-                        <button class="btn btn-sm btn-outline-danger fw-bold" onclick="cerrarSesion('Docente')">
+                        <button class="btn btn-sm btn-outline-danger fw-bold" onclick="cerrarSesion('Docente', true)">
                             <i class="bi bi-box-arrow-right me-1"></i> Cerrar Sesión
                         </button>
                     </div>
@@ -225,7 +225,7 @@
                 </div>
                 <div id="loginAdminBox" class="row justify-content-center">
                     <div class="col-md-6 mb-3">
-                        <input type="password" id="inputClaveAdmin" class="form-control" placeholder="Clave de Administrador">
+                        <input type="password" id="inputClaveAdmin" class="form-control" placeholder="Clave de Administrador" autocomplete="new-password">
                     </div>
                     <div class="col-12 text-center">
                         <button class="btn btn-danger fw-bold px-5" onclick="verificarAdmin()">Ingresar</button>
@@ -234,7 +234,7 @@
                 <div id="panelAdminAutorizado" class="panel-oculto">
                     <div class="alert alert-danger d-flex justify-content-between align-items-center fw-bold">
                         <span><i class="bi bi-shield-fill-check me-2"></i>Panel de Administrador Activo</span>
-                        <button class="btn btn-sm btn-outline-dark fw-bold" onclick="cerrarSesion('Admin')">
+                        <button class="btn btn-sm btn-outline-dark fw-bold" onclick="cerrarSesion('Admin', true)">
                             <i class="bi bi-box-arrow-right me-1"></i> Cerrar Sesión
                         </button>
                     </div>
@@ -412,7 +412,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        const URL_API = "https://script.google.com/macros/s/AKfycbxPo5n8K0epizaVG-iZWBdz2fd_cxj7vbN0zgTuijC6AHqAQXagnOzmtEz3qr7Rofuo/exec"; 
+        const URL_API = "https://script.google.com/macros/s/AKfycbzn3ASd1dJbPCA2EBnNS5CRwVg2oviIr6K7scS65vbw2WlBK8mlsVW9CEwzd_KB6PZs/exec"; 
 
         let tokens = {
             docente: sessionStorage.getItem("tokenDocente") || "",
@@ -459,7 +459,7 @@
             }
         }
 
-        function cerrarSesion(rol) {
+        function cerrarSesion(rol, demandaUsuario = false) {
             if (rol === 'Estudiante') {
                 sesionEstudiante = { codigo: "", pass: "" };
                 document.getElementById("inputCodigoEstudiante").value = "";
@@ -470,7 +470,7 @@
                 document.getElementById("tablaHead").innerHTML = "";
                 document.getElementById("tablaBody").innerHTML = `<tr><td colspan="8" class="text-muted py-4">Seleccione su portal e ingrese para consultar datos.</td></tr>`;
                 document.getElementById("tituloTabla").innerText = "Resultados de la Consulta";
-                alert("Sesión de Estudiante cerrada.");
+                if (demandaUsuario) alert("Sesión de Estudiante cerrada.");
             } else if (rol === 'Docente') {
                 tokens.docente = "";
                 sessionStorage.removeItem("tokenDocente");
@@ -478,7 +478,7 @@
                 document.getElementById("loginDocenteBox").style.display = "flex";
                 document.getElementById("inputUsuarioDocente").value = "";
                 document.getElementById("inputPassDocente").value = "";
-                alert("Sesión de docente cerrada.");
+                if (demandaUsuario) alert("Sesión de docente cerrada.");
             } else if (rol === 'Admin') {
                 tokens.admin = "";
                 sessionStorage.removeItem("tokenAdmin");
@@ -488,7 +488,7 @@
                 if (document.getElementById("areaResultadosAdmin")) {
                     document.getElementById("areaResultadosAdmin").innerText = "";
                 }
-                alert("Sesión de administrador cerrada.");
+                if (demandaUsuario) alert("Sesión de administrador cerrada.");
             }
         }
 
@@ -561,175 +561,75 @@
                 document.getElementById("loginDocenteBox").style.display = "none";
                 document.getElementById("panelDocenteAutorizado").style.display = "block";
             } else {
-                alert(data.message || "Credenciales incorrectas.");
+                alert(data.message || "Credenciales docentes incorrectas.");
             }
         }
 
         async function verificarAdmin() {
-            let clave = document.getElementById("inputClaveAdmin").value.trim();
-            if(!clave) { alert("Ingrese la clave de administrador"); return; }
+            let pass = document.getElementById("inputClaveAdmin").value.trim();
+            if(!pass) { alert("Ingrese la clave de administrador"); return; }
 
-            let data = await solicitarAPI({ accion: "loginAdmin", clave: clave });
+            let data = await solicitarAPI({ accion: "loginAdmin", pass: pass });
             if(data.success) {
                 tokens.admin = data.token;
                 sessionStorage.setItem("tokenAdmin", data.token);
                 document.getElementById("loginAdminBox").style.display = "none";
                 document.getElementById("panelAdminAutorizado").style.display = "block";
             } else {
-                alert(data.message || "Clave administrativa incorrecta.");
+                alert(data.message || "Clave de administrador incorrecta.");
             }
         }
 
         async function cargarDatosGenerales(rol) {
-            let token = rol === 'Docente' ? tokens.docente : tokens.admin;
-            if(!token) {
-                alert("Su sesión ha expirado. Por favor, vuelva a ingresar.");
-                cerrarSesion(rol);
-                return;
-            }
-
-            let selectId = rol === 'Docente' ? "selectPestanaDocente" : "selectPestanaAdmin";
+            let token = (rol === 'Admin') ? tokens.admin : tokens.docente;
+            let selectId = (rol === 'Admin') ? "selectPestanaAdmin" : "selectPestanaDocente";
             let pestana = document.getElementById(selectId).value;
 
             let titulo = document.getElementById("tituloTabla");
             let tablaHead = document.getElementById("tablaHead");
             let tablaBody = document.getElementById("tablaBody");
 
-            titulo.innerText = `Cargando tabla: ${pestana.toUpperCase()}...`;
-            tablaBody.innerHTML = `<tr><td colspan="8"><div class="spinner-border text-primary" role="status"></div> Cargando datos...</td></tr>`;
+            titulo.innerText = `Cargando tabla ${pestana}...`;
+            tablaBody.innerHTML = `<tr><td colspan="8"><div class="spinner-border text-primary" role="status"></div> Cargando...</td></tr>`;
 
             let data = await solicitarAPI({
-                accion: "obtenerDatosGeneral",
+                accion: "obtenerTablaCompleta",
                 token: token,
+                rol: rol,
                 pestana: pestana
             });
 
             if(!data.success) {
-                tablaBody.innerHTML = `<tr><td colspan='8' class='text-danger py-3'>${escapeHTML(data.message || 'Error al obtener datos.')}</td></tr>`;
-                if(data.message && data.message.toLowerCase().includes("expirada")) {
-                    cerrarSesion(rol);
-                }
+                tablaBody.innerHTML = `<tr><td colspan='8' class='text-danger py-3'>${escapeHTML(data.message || 'Error de autenticación.')}</td></tr>`;
                 return;
             }
 
             if(!data.filas || data.filas.length === 0) {
-                tablaBody.innerHTML = "<tr><td colspan='8' class='text-warning py-3'>No hay registros guardados en esta tabla.</td></tr>";
+                tablaBody.innerHTML = "<tr><td colspan='8' class='text-warning py-3'>No hay datos en esta sección.</td></tr>";
             } else {
                 let llaves = Object.keys(data.filas[0]);
-                titulo.innerText = `Tabla de Datos: ${pestana.toUpperCase()}`;
+                titulo.innerText = `Mostrando Tabla: ${pestana.toUpperCase()}`;
                 tablaHead.innerHTML = `<tr>${llaves.map(k => `<th>${escapeHTML(k.toUpperCase())}</th>`).join('')}</tr>`;
                 tablaBody.innerHTML = data.filas.map(row => `<tr>${llaves.map(k => `<td>${escapeHTML(row[k] !== undefined ? String(row[k]) : '')}</td>`).join('')}</tr>`).join('');
             }
         }
 
-        async function adminCrearUsuario() {
-            if(!tokens.admin) {
-                alert("Su sesión ha expirado. Ingrese la clave de administrador de nuevo.");
-                cerrarSesion('Admin');
-                return;
-            }
-
-            let tipo = document.getElementById("adminTipoNuevo").value;
-            let nombre = document.getElementById("adminNombreNuevo").value.trim();
-            if(!nombre) { alert("Ingrese un nombre completo."); return; }
-
-            let area = document.getElementById("areaResultadosAdmin");
-            area.innerText = "Creando usuario...";
-
-            let data = await solicitarAPI({
-                accion: "adminCrearUsuario",
-                token: tokens.admin,
-                tipo: tipo,
-                nombre: nombre
-            });
-
-            if(data.success) {
-                area.innerHTML = `<strong>¡Usuario Creado!</strong> Código: <span class="text-dark">${data.codigo}</span> | Clave: <span class="text-dark">${data.pass}</span>`;
-                document.getElementById("adminNombreNuevo").value = "";
-            } else {
-                area.innerText = data.message || "Error al crear el usuario.";
-                if(data.message && data.message.toLowerCase().includes("expirada")) {
-                    cerrarSesion('Admin');
-                }
-            }
-        }
-
-        async function adminResetPass() {
-            if(!tokens.admin) {
-                alert("Su sesión ha expirado. Ingrese la clave de administrador de nuevo.");
-                cerrarSesion('Admin');
-                return;
-            }
-
-            let codigo = document.getElementById("adminCodigoObjetivo").value.trim();
-            if(!codigo) { alert("Ingrese un código de usuario."); return; }
-
-            let area = document.getElementById("areaResultadosAdmin");
-            area.innerText = "Restableciendo clave...";
-
-            let data = await solicitarAPI({
-                accion: "adminResetPass",
-                token: tokens.admin,
-                codigo: codigo
-            });
-
-            if(data.success) {
-                area.innerHTML = `<strong>¡Clave Restablecida!</strong> Usuario: <span class="text-dark">${codigo}</span> | Nueva Clave: <span class="text-dark">${data.nuevaPass}</span>`;
-            } else {
-                area.innerText = data.message || "Error al restablecer contraseña.";
-                if(data.message && data.message.toLowerCase().includes("expirada")) {
-                    cerrarSesion('Admin');
-                }
-            }
-        }
-
-        async function adminEliminarUsuario() {
-            if(!tokens.admin) {
-                alert("Su sesión ha expirado. Ingrese la clave de administrador de nuevo.");
-                cerrarSesion('Admin');
-                return;
-            }
-
-            let codigo = document.getElementById("adminCodigoObjetivo").value.trim();
-            if(!codigo) { alert("Ingrese un código de usuario."); return; }
-
-            if(!confirm(`¿Está seguro de eliminar permanentemente al usuario ${codigo}?`)) return;
-
-            let area = document.getElementById("areaResultadosAdmin");
-            area.innerText = "Eliminando usuario...";
-
-            let data = await solicitarAPI({
-                accion: "adminEliminarUsuario",
-                token: tokens.admin,
-                codigo: codigo
-            });
-
-            if(data.success) {
-                area.innerHTML = `<span class="text-success">Usuario ${codigo} eliminado con éxito.</span>`;
-                document.getElementById("adminCodigoObjetivo").value = "";
-            } else {
-                area.innerText = data.message || "Error al eliminar usuario.";
-                if(data.message && data.message.toLowerCase().includes("expirada")) {
-                    cerrarSesion('Admin');
-                }
-            }
-        }
-
         function abrirModalModificacion(rol) {
             rolActivoModal = rol;
-            let modalEl = new bootstrap.Modal(document.getElementById('modalModificacion'));
-            cambiarCamposFormularioModal();
-            modalEl.show();
-        }
-
-        function alternarVisibilidadCamposAccion() {
-            let accion = document.getElementById("modAccion").value;
-            let seccionDinamica = document.getElementById("seccionCamposDinamicos");
-            if (accion === "eliminar") {
-                seccionDinamica.style.display = "none";
-            } else {
-                seccionDinamica.style.display = "block";
+            let selectPestanaModal = document.getElementById("modPestana");
+            
+            if (rol === 'Docente') {
+                let selectDocente = document.getElementById("selectPestanaDocente").value;
+                selectPestanaModal.value = selectDocente;
+            } else if (rol === 'Admin') {
+                let selectAdmin = document.getElementById("selectPestanaAdmin").value;
+                selectPestanaModal.value = selectAdmin;
             }
+
+            cambiarCamposFormularioModal();
+            let modalElem = document.getElementById('modalModificacion');
+            let bsModal = new bootstrap.Modal(modalElem);
+            bsModal.show();
         }
 
         function cambiarCamposFormularioModal() {
@@ -738,99 +638,149 @@
             contenedor.innerHTML = "";
 
             let campos = [];
-            if(pestana === "estudiantes") {
-                campos = [
-                    { id: "nombre", label: "Nombre Completo", type: "text" },
-                    { id: "grado", label: "Grado", type: "text" },
-                    { id: "seccion", label: "Sección", type: "text" },
-                    { id: "encargado", label: "Nombre del Encargado", type: "text" },
-                    { id: "telefono", label: "Teléfono de Contacto", type: "text" }
-                ];
-            } else if(pestana === "calificaciones") {
-                campos = [
-                    { id: "materia", label: "Asignatura", type: "text" },
-                    { id: "periodo", label: "Periodo / Trimestre", type: "text" },
-                    { id: "nota", label: "Calificación Final", type: "number" }
-                ];
-            } else if(pestana === "asistencia") {
-                campos = [
-                    { id: "fecha", label: "Fecha (DD/MM/AAAA)", type: "date" },
-                    { id: "estado", label: "Estado (Presente/Ausente/Jus)", type: "text" }
-                ];
-            } else if(pestana === "conducta") {
-                campos = [
-                    { id: "fecha", label: "Fecha", type: "date" },
-                    { id: "observacion", label: "Observación / Anotación", type: "text" },
-                    { id: "tipo", label: "Tipo (Positiva/Demérito)", type: "text" }
-                ];
-            } else if(pestana === "asignaturas") {
-                campos = [
-                    { id: "nombre", label: "Nombre de la Asignatura", type: "text" },
-                    { id: "docente", label: "Docente Encargado", type: "text" }
-                ];
+
+            if (pestana === "estudiantes") {
+                campos = ["nombre", "grado", "pass"];
+            } else if (pestana === "docentes") {
+                campos = ["nombre", "especialidad", "pass"];
+            } else if (pestana === "calificaciones") {
+                campos = ["materia", "periodo", "nota"];
+            } else if (pestana === "asistencia") {
+                campos = ["fecha", "estado", "observacion"];
+            } else if (pestana === "conducta") {
+                campos = ["fecha", "tipo", "descripcion"];
+            } else if (pestana === "asignaturas") {
+                campos = ["nombre", "docente_cargo", "horario"];
             }
 
-            campos.forEach(c => {
-                contenedor.innerHTML += `
-                    <div class="col-md-6">
-                        <label class="form-label small fw-bold">${c.label}:</label>
-                        <input type="${c.type}" id="mod_campo_${c.id}" class="form-control form-control-sm" step="any">
-                    </div>
+            campos.forEach(campo => {
+                let col = document.createElement("div");
+                col.className = "col-md-6";
+                col.innerHTML = `
+                    <label class="form-label small fw-bold text-capitalize">${campo}:</label>
+                    <input type="text" id="mod_campo_${campo}" class="form-control form-control-sm" required>
                 `;
+                contenedor.appendChild(col);
             });
 
             alternarVisibilidadCamposAccion();
         }
 
-        async function enviarDatosModificacion(e) {
-            e.preventDefault();
-            let token = rolActivoModal === 'Docente' ? tokens.docente : tokens.admin;
-            if(!token) {
-                alert("Su sesión ha expirado. Por favor, inicie sesión nuevamente.");
-                cerrarSesion(rolActivoModal);
-                return;
-            }
+        function alternarVisibilidadCamposAccion() {
+            let accion = document.getElementById("modAccion").value;
+            let seccion = document.getElementById("seccionCamposDinamicos");
+            let inputs = seccion.querySelectorAll("input");
 
+            if (accion === "eliminar") {
+                seccion.style.display = "none";
+                inputs.forEach(i => i.removeAttribute("required"));
+            } else {
+                seccion.style.display = "block";
+                inputs.forEach(i => i.setAttribute("required", "true"));
+            }
+        }
+
+        async function enviarDatosModificacion(event) {
+            event.preventDefault();
+            let rol = rolActivoModal;
+            let token = (rol === 'Admin') ? tokens.admin : tokens.docente;
             let pestana = document.getElementById("modPestana").value;
             let accion = document.getElementById("modAccion").value;
             let codigo = document.getElementById("modCodigo").value.trim();
 
-            let payloadData = { codigo: codigo };
+            let payloadDatos = { codigo: codigo };
 
-            if(accion !== "eliminar") {
-                let contenedor = document.getElementById("contenedorCamposDinamicos");
-                let inputs = contenedor.querySelectorAll("input");
+            if (accion !== "eliminar") {
+                let inputs = document.querySelectorAll("[id^='mod_campo_']");
                 inputs.forEach(input => {
-                    let key = input.id.replace("mod_campo_", "");
-                    payloadData[key] = input.value.trim();
+                    let nombreCampo = input.id.replace("mod_campo_", "");
+                    payloadDatos[nombreCampo] = input.value.trim();
                 });
             }
 
-            let btn = document.getElementById("btnGuardarModal");
-            btn.disabled = true;
-            btn.innerText = "Procesando...";
-
             let response = await solicitarAPI({
-                accion: "gestionarDatosRegistros",
+                accion: "gestionarDatos",
                 token: token,
+                rol: rol,
                 pestana: pestana,
-                operacion: accion,
-                datos: payloadData
+                subAccion: accion,
+                datos: payloadDatos
             });
 
-            btn.disabled = false;
-            btn.innerText = "Procesar";
-
-            if(response.success) {
-                alert("Operación completada exitosamente.");
-                let modalInst = bootstrap.Modal.getInstance(document.getElementById('modalModificacion'));
-                if(modalInst) modalInst.hide();
-                cargarDatosGenerales(rolActivoModal);
+            if (response.success) {
+                alert("Operación completada con éxito.");
+                let modalInstance = bootstrap.Modal.getInstance(document.getElementById('modalModificacion'));
+                if (modalInstance) modalInstance.hide();
+                cargarDatosGenerales(rol);
             } else {
-                alert(response.message || "Ocurrió un error al procesar.");
-                if(response.message && response.message.toLowerCase().includes("expirada")) {
-                    cerrarSesion(rolActivoModal);
-                }
+                alert(response.message || "Error al procesar la solicitud.");
+            }
+        }
+
+        async function adminCrearUsuario() {
+            let tipo = document.getElementById("adminTipoNuevo").value;
+            let nombre = document.getElementById("adminNombreNuevo").value.trim();
+
+            if (!nombre) { alert("Ingrese un nombre completo."); return; }
+
+            let area = document.getElementById("areaResultadosAdmin");
+            area.innerText = "Generando registro...";
+
+            let response = await solicitarAPI({
+                accion: "adminCrearUsuario",
+                token: tokens.admin,
+                tipo: tipo,
+                nombre: nombre
+            });
+
+            if (response.success) {
+                area.innerHTML = `<span class="text-success">Usuario Creado: <strong>${response.codigo}</strong> | Clave: <strong>${response.pass}</strong></span>`;
+                document.getElementById("adminNombreNuevo").value = "";
+            } else {
+                area.innerHTML = `<span class="text-danger">${escapeHTML(response.message || "Error al crear usuario.")}</span>`;
+            }
+        }
+
+        async function adminResetPass() {
+            let codigo = document.getElementById("adminCodigoObjetivo").value.trim();
+            if (!codigo) { alert("Ingrese el código objetivo."); return; }
+
+            let area = document.getElementById("areaResultadosAdmin");
+            area.innerText = "Restableciendo clave...";
+
+            let response = await solicitarAPI({
+                accion: "adminResetPass",
+                token: tokens.admin,
+                codigo: codigo
+            });
+
+            if (response.success) {
+                area.innerHTML = `<span class="text-success">Nueva Clave para <strong>${codigo}</strong>: <strong>${response.nuevaPass}</strong></span>`;
+            } else {
+                area.innerHTML = `<span class="text-danger">${escapeHTML(response.message || "Error al restablecer clave.")}</span>`;
+            }
+        }
+
+        async function adminEliminarUsuario() {
+            let codigo = document.getElementById("adminCodigoObjetivo").value.trim();
+            if (!codigo) { alert("Ingrese el código objetivo."); return; }
+
+            if (!confirm(`¿Está seguro de eliminar permanentemente al usuario ${codigo}?`)) return;
+
+            let area = document.getElementById("areaResultadosAdmin");
+            area.innerText = "Eliminando usuario...";
+
+            let response = await solicitarAPI({
+                accion: "adminEliminarUsuario",
+                token: tokens.admin,
+                codigo: codigo
+            });
+
+            if (response.success) {
+                area.innerHTML = `<span class="text-success">Usuario <strong>${codigo}</strong> eliminado con éxito.</span>`;
+                document.getElementById("adminCodigoObjetivo").value = "";
+            } else {
+                area.innerHTML = `<span class="text-danger">${escapeHTML(response.message || "Error al eliminar usuario.")}</span>`;
             }
         }
 
@@ -838,9 +788,8 @@
             e.preventDefault();
             let nombre = document.getElementById("wsNombre").value.trim();
             let grado = document.getElementById("wsGrado").value.trim();
-            let texto = `Hola, mi nombre es ${nombre}. Consulta: ${grado}`;
-            let url = `https://wa.me/50375982371?text=${encodeURIComponent(texto)}`;
-            window.open(url, '_blank');
+            let texto = encodeURIComponent(`Hola, soy ${nombre}. Quisiera consultar sobre: ${grado}`);
+            window.open(`https://wa.me/50375982371?text=${texto}`, '_blank');
         }
     </script>
 </body>
